@@ -9,7 +9,7 @@ const Login = ({history}) => {
     const email = event.target.signinEmail.value;
     const password = event.target.signinPassword.value;
     firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-      history.push('/')
+      history.push('/explore')
     }).catch(function(error) {
       alert(error.message) 
     });
@@ -18,6 +18,7 @@ const Login = ({history}) => {
   return (
     <React.Fragment>
       <h1>Travelogue</h1>
+      <p>Log in to your account.</p>
       <form onSubmit={doLogin}>
         <input
           type='text'

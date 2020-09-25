@@ -5,11 +5,10 @@ import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import OSM from 'ol/source/OSM';
-// import XYZ from 'ol/source/XYZ'
+
 import {transform} from 'ol/proj'
-// import {toStringXY} from 'ol/coordinate';
 import Stamen from 'ol/source/Stamen';
+import styles from './Explore.module.css';
 
 function Explore(props) {
 
@@ -32,7 +31,9 @@ function Explore(props) {
       layers: [
 
         new TileLayer({
-          source: new OSM()
+          source: new Stamen({
+            layer: 'toner',
+          }),
         }),
 
         initialFeaturesLayer
@@ -53,21 +54,6 @@ function Explore(props) {
 
   }, [])
 
-  useEffect( () => {
-    if (props.features.length) {
-      featuresLayer.setSource(
-        new VectorSource({
-          features: props.features
-        })
-      )
-
-      map.getview().fit(featuresLayer.getSource().getExtent(), {
-        padding: [100, 100, 100, 100]
-      })
-
-    }
-  }, [props.features])
-
   const handleMapClick = (event) => {
     const clickedCoord = mapRef.current.getCoordinateFromPixel(event.pixel);
     const transformedCoord = transform(clickedCoord, 'EPSG:3857', 'EPSG:4326');
@@ -80,7 +66,7 @@ function Explore(props) {
     <React.Fragment>
       <Nav />
       <p>Map will be here soon!</p>
-      <div ref={mapElement} id='map' clasName='map' style={{height: '70vh', width: '70%'}}></div> 
+      <div ref={mapElement} className={styles.map} id='map'></div> 
     </React.Fragment>
   )
 }

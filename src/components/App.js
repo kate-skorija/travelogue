@@ -6,11 +6,7 @@ import Explore from './Explore';
 import Splash from './Splash';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Feature from 'ol/Feature';
-
 function App() {
-
-  const [features, setFeatures] = useState([])
 
   return (
     <BrowserRouter>
@@ -25,7 +21,7 @@ function App() {
         <Logout />
       </Route>
       <Route path="/explore">
-        <Explore features={features} />
+        <Explore />
       </Route>
       <Route path="/">
         <Splash />

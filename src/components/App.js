@@ -1,10 +1,9 @@
 import React from 'react';
-import Explore from './Explore';
-import Login from './Login';
 import Register from './Register';
+import Login from './Login';
 import Logout from './Logout';
+import Explore from './Explore';
 import Splash from './Splash';
-import logo from './logo.svg';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 function App() {
@@ -22,9 +21,6 @@ function App() {
       </Route>
       <Route path="/explore">
         <Explore />
-      </Route>
-      <Route path="/myplaces">
-        <MyPlaces />
       </Route>
       <Route path="/">
         <Splash />

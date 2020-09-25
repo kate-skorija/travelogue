@@ -17,18 +17,16 @@ const Login = ({history}) => {
 
   return (
     <React.Fragment>
-      <h1>Log In</h1>
+      <h1>Travelogue</h1>
       <form onSubmit={doLogin}>
         <input
           type='text'
           name='signinEmail'
           placeholder='email' />
-        <br/>
         <input
           type='password'
           name='signinPassword'
           placeholder='Password' />
-        <br/>
         <button type='submit'>Log In</button>
       </form>
     </React.Fragment>

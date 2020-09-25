@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import rootReducer from './reducers/index';
 import * as serviceWorker from './serviceWorker';
 
 const store = createStore(rootReducer);

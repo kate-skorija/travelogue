@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import firebase from "firebase/app";
+import Nav from './Nav';
 
 function Logout() {
 

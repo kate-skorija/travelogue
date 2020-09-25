@@ -2,7 +2,7 @@ import React from "react";
 import firebase from "firebase/app";
 import { withRouter } from 'react-router-dom';
 
-function Register() {
+const Register = ({history}) => {  
 
   function doRegister(event) {
     event.preventDefault();
@@ -19,7 +19,7 @@ function Register() {
     <React.Fragment>
       <h1>Travelogue</h1>
       <p>For endless exploration, create a free account.</p>
-      <form onSubmit={doSignUp}>
+      <form onSubmit={doRegister}>
         <input
           type='text'
           name='email'

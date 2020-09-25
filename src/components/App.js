@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Register from './Register';
 import Login from './Login';
 import Logout from './Logout';
@@ -6,7 +6,12 @@ import Explore from './Explore';
 import Splash from './Splash';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
+import Feature from 'ol/Feature';
+
 function App() {
+
+  const [features, setFeatures] = useState([])
+
   return (
     <BrowserRouter>
     <Switch>
@@ -20,7 +25,7 @@ function App() {
         <Logout />
       </Route>
       <Route path="/explore">
-        <Explore />
+        <Explore features={features} />
       </Route>
       <Route path="/">
         <Splash />

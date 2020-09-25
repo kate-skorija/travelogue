@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import firebase from "firebase/app";
 import { Link } from 'react-router-dom';
-import Nav from './Nav';
 
 function Logout() {
 

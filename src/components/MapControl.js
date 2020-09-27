@@ -1,25 +1,25 @@
-import React from "react";
+import React, {useState, useRef, useEffect } from "react";
 import Nav from './Nav';
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-// import {transform} from 'ol/proj'
+import {transform} from 'ol/proj'
 import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
-// import { useFirestore } from 'react-redux-firebase';
-// import firebase from "firebase/app";
-// import { render } from "@testing-library/react";
-// import PropTypes from 'prop-types';
+import { useFirestore } from 'react-redux-firebase';
+import firebase from "firebase/app";
+import PropTypes from 'prop-types';
+
 
 class MapControl extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {};
   }
-
+  
   componentDidMount() {
     const featuresLayer = new VectorLayer({
       source: new VectorSource({
@@ -29,6 +29,7 @@ class MapControl extends React.Component {
   
     const map = new Map({
       target: 'map',
+      controls: [],
       layers: [
         new TileLayer({
           source: new Stamen({
@@ -55,7 +56,7 @@ class MapControl extends React.Component {
     console.log("Map clicked!")
   }
   
-
+  
   render() {
     return (
       <React.Fragment>
@@ -64,9 +65,7 @@ class MapControl extends React.Component {
       </React.Fragment>
     )
   }
-
 }
-
 
 export default MapControl;
 
@@ -80,12 +79,11 @@ export default MapControl;
 
 // Class Component
 
-// constructor (props) {
+// class MapControl extends React.Component {
+
+// constructor(props) {
 //   super(props);
-//   this.state = {
-//     map: null,
-//     featuresLayer: null
-//   };
+//   this.state = {};
 // }
 
 // componentDidMount() {
@@ -123,68 +121,71 @@ export default MapControl;
 //   console.log("Map clicked!")
 // }
 
+
 // render() {
 //   return (
 //     <React.Fragment>
 //       <Nav />
-//       <div className='map'></div>
+//       <div className={styles.map} id='map'></div>
 //     </React.Fragment>
-//   );
+//   )
 // }
+//}
 
 
 // Functional Map with Hooks
 
-// const [ map, setMap ] = useState();
-// const [ featuresLayer, setFeaturesLayer ] = useState();
-// const [ selectedCoord, setSelectedCoord ] = useState();
+// function MapControl (props) {
+//   const [ map, setMap ] = useState();
+//   const [ featuresLayer, setFeaturesLayer ] = useState();
+//   const [ selectedCoord, setSelectedCoord ] = useState();
 
-// const mapElement = useRef();
-// const mapRef = useRef();
-// mapRef.current = map;
+//   const mapElement = useRef();
+//   const mapRef = useRef();
+//   mapRef.current = map;
 
-// useEffect( () => {
+//   useEffect( () => {
 
-//   const initialFeaturesLayer = new VectorLayer({
-//     source: new VectorSource()
-//   });
-  
-//   const initialMap = new Map({
-//     target: mapElement.current,
-//     layers: [
+//     const initialFeaturesLayer = new VectorLayer({
+//       source: new VectorSource()
+//     });
+    
+//     const initialMap = new Map({
+//       target: mapElement.current,
+//       layers: [
 
-//       new TileLayer({
-//         source: new Stamen({
-//           layer: 'toner',
+//         new TileLayer({
+//           source: new Stamen({
+//             layer: 'toner',
+//           }),
 //         }),
+
+//         initialFeaturesLayer
+
+//       ],
+//       view: new View({
+//         center: [0, 0],
+//         zoom: 2
 //       }),
+//       target: 'map',
+//       controls: []
+//     })
+    
+//     initialMap.on('click', handleMapClick)
 
-//       initialFeaturesLayer
+//     setMap(initialMap);
+//     setFeaturesLayer(initialFeaturesLayer);
 
-//     ],
-//     view: new View({
-//       center: [0, 0],
-//       zoom: 2
-//     }),
-//     target: 'map',
-//     controls: []
-//   })
-  
-//   initialMap.on('click', handleMapClick)
+//   }, [])
 
-//   setMap(initialMap);
-//   setFeaturesLayer(initialFeaturesLayer);
+//   const firestore = useFirestore();
+//   const user = firebase.auth().currentUser;
 
-// }, [])
-
-// const firestore = useFirestore();
-// const user = firebase.auth().currentUser;
-
-// const handleMapClick = (event) => {
-//   const clickedCoord = mapRef.current.getCoordinateFromPixel(event.pixel);
-//   const transformedCoord = transform(clickedCoord, 'EPSG:3857', 'EPSG:4326');
-//   setSelectedCoord(transformedCoord);
-//   console.log(transformedCoord)
+//   const handleMapClick = (event) => {
+//     const clickedCoord = mapRef.current.getCoordinateFromPixel(event.pixel);
+//     const transformedCoord = transform(clickedCoord, 'EPSG:3857', 'EPSG:4326');
+//     setSelectedCoord(transformedCoord);
+//     console.log(transformedCoord)
 
 //   // return firestore.collection('places').add(
 //   //   {
@@ -193,12 +194,14 @@ export default MapControl;
 //   //     userId: user.uid
 //   //   }
 //   // );
+//   }
+
+//   return (
+//     <React.Fragment>
+//       <Nav />
+//       <div ref={mapElement} className={styles.map} id='map'></div> 
+//     </React.Fragment>
+//   )
 // }
 
-// return (
-//   <React.Fragment>
-//     <Nav />
-//     <div ref={mapElement} className={styles.map} id='map'></div> 
-//   </React.Fragment>
-// )
-// }
+// export default MapControl;

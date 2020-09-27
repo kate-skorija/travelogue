@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Register from './Register';
 import Login from './Login';
 import Logout from './Logout';
-import Explore from './Explore';
+import MapControl from './MapControl';
 import Splash from './Splash';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function App() {
         <Logout />
       </Route>
       <Route path="/explore">
-        <Explore />
+        <MapControl />
       </Route>
       <Route path="/">
         <Splash />

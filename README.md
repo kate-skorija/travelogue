@@ -87,3 +87,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 *This project uses the following license: [MIT](https://opensource.org/licenses/MIT)*
 
 Copyright (c) 2020 **_Kate Skorija_** 
+
+
+
+<!-- Where You Left Off:  -->
+<!-- You were trying to create a new point on a map click; may need a separate createPoint.js? and to add state to explore and pass down methods -->
+<!-- Check out the regular Draw example for Open Layers, compare to what that other guy did -->

@@ -8,16 +8,19 @@
 ![]()
 
 ## Description
-
+Travelogue is a visual resource for users to keep track of places they’ve been, and places they would like to go.
+Users can explore a world map and place pins on locations, updating the pins with notes and photos as they wish.
 
 <br><br>
 
 ## Component Diagram
 
-![Component Diagram](./public/diagram.png)
+![Component Diagram](./public/Wireframing.png)
 <br><br>
 
 ## User Interface
+
+These will be updated with screenshots of the project.
 
 ![]()
 
@@ -26,12 +29,15 @@
 ![]()
 
 ## User Stories
-
+*  Allow users to navigate a world map easily (zoom, pan, etc)
+*  Allow users to place pins on map to mark places they’ve been and add another color of pin for places they would like to go
+*  Allow users to click on a placed pin and add/update/review notes they’ve made about that place (what to see/what they have seen, restaurants, people they met or traveled with, etc.)
 
 <br><br>
 
 ## Known Bugs
 
+There are no known bugs at this time.
  
 <br><br>
 
@@ -48,6 +54,8 @@ If there are any issues or questions, please reach out to me through [my GitHub 
 *  JSX
 *  React
 *  Redux
+*  OpenLayers (map)
+*  Stamen (map tiles)
 *  Webpack
 *  npm
 *  Jest
@@ -92,4 +100,4 @@ Copyright (c) 2020 **_Kate Skorija_**
 
 <!-- Where You Left Off:  -->
 <!-- You were trying to create a new point on a map click; may need a separate createPoint.js? and to add state to explore and pass down methods -->
-<!-- Check out the regular Draw example for Open Layers, compare to what that other guy did -->
+<!-- Check out the regular Draw example for Open Layers, compare to other examples -->

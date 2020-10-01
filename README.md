@@ -1,6 +1,6 @@
 # Travelogue
 
-## _Epicodus Capstone Project_
+### Epicodus Capstone Project
 
 ### By Kate Skorija
 <br>

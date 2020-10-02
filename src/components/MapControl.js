@@ -8,6 +8,7 @@ import VectorSource from 'ol/source/Vector'
 import {transform} from 'ol/proj'
 import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import { useFirestore } from 'react-redux-firebase';
 import firebase from "firebase/app";
 import PropTypes from 'prop-types';
@@ -22,11 +23,18 @@ class MapControl extends React.Component {
     super(props);
     this.state = {
       map: null,
+      featuresLayer: null,
       points: []
     };
   }
   
   componentDidMount() {
+
+    const featuresLayer = new VectorLayer({
+      source: new VectorLayer({
+        features:[]
+      })
+    });
   
     const map = new Map({
       target: 'map',
@@ -37,6 +45,7 @@ class MapControl extends React.Component {
             layer: 'toner',
           }),
         }),
+        featuresLayer,
       ],
       view: new View({
         center: [0, 0],
@@ -48,6 +57,7 @@ class MapControl extends React.Component {
   
     this.setState({
       map: map,
+      featuresLayer: featuresLayer
     });
   }
   
@@ -55,14 +65,76 @@ class MapControl extends React.Component {
     var coord = event.coordinate;
     console.log(coord);
 
+    // var pointStyle = new Style({
+    //   fill: new Fill({
+    //     color: 'rgba(255, 255, 255, 0.2)',
+    //   }),
+    //   stroke: new Stroke({
+    //     color: '#ffcc33',
+    //     width: 2,
+    //   }),
+    //   image: new CircleStyle({
+    //     radius: 7,
+    //     fill: new Fill({
+    //       color: '#ffcc33',
+    //     }),
+    //   }),
+    // })
+    
+    // var vectorSource = new VectorLayer({
+    //   features: this.state.points
+    // });
+
+    // var pointsVectorLayer = new VectorLayer({
+    //   source: vectorSource,
+    //   style: pointStyle
+    // })
+
+    // this.setState({
+    //   featuresLayer: pointsVectorLayer
+    // })
+
+    // const newPoint = new Feature({
+    //     geometry: new Point(fromLonLat(coord)),
+    //     name: "New Point",
+    //   })
+    
     this.state.points.push(new Feature({
       geometry: new Point(fromLonLat(coord)),
-      name: "New Point"
+      name: "New Point",
     }))
 
     console.log(this.state.points)
+
   }
+
   
+  
+  componentDidUpdate() {
+
+    // const vectorSource = new VectorLayer({
+    //   features: this.state.points
+    // })
+
+    // this.state.featuresLayer = new VectorLayer({
+    //     source: vectorSource,
+    //     style: new Style({
+    //       fill: new Fill({
+    //         color: 'rgba(255, 255, 255, 0.2)',
+    //       }),
+    //       stroke: new Stroke({
+    //         color: '#ffcc33',
+    //         width: 2,
+    //       }),
+    //       image: new CircleStyle({
+    //         radius: 7,
+    //         fill: new Fill({
+    //           color: '#ffcc33',
+    //         }),
+    //       }),
+    //     })
+    //   })
+  }
   
   render() {
     return (

@@ -11,21 +11,22 @@ import styles from './MapControl.module.css';
 import { useFirestore } from 'react-redux-firebase';
 import firebase from "firebase/app";
 import PropTypes from 'prop-types';
+import { Feature } from "ol";
+import { Point } from 'ol/geom'
+import { fromLonLat } from 'ol/proj';
 
 
 class MapControl extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      map: null,
+      points: []
+    };
   }
   
   componentDidMount() {
-    const featuresLayer = new VectorLayer({
-      source: new VectorSource({
-        features:[]
-      })
-    });
   
     const map = new Map({
       target: 'map',
@@ -36,7 +37,6 @@ class MapControl extends React.Component {
             layer: 'toner',
           }),
         }),
-        featuresLayer
       ],
       view: new View({
         center: [0, 0],
@@ -48,12 +48,19 @@ class MapControl extends React.Component {
   
     this.setState({
       map: map,
-      featuresLayer: featuresLayer
     });
   }
   
-  handleMapClick() {
-    console.log("Map clicked!")
+  handleMapClick(event) {
+    var coord = event.coordinate;
+    console.log(coord);
+
+    this.state.points.push(new Feature({
+      geometry: new Point(fromLonLat(coord)),
+      name: "New Point"
+    }))
+
+    console.log(this.state.points)
   }
   
   

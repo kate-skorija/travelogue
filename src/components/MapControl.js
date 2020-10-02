@@ -56,7 +56,6 @@ class MapControl extends React.Component {
   handleMapClick(event) {
     const coord = event.coordinate;
     const transformedCoord = transform(coord, 'EPSG:3857', 'EPSG:4326');
-    console.log(transformedCoord);
 
     const user = firebase.auth().currentUser;
 
@@ -65,8 +64,9 @@ class MapControl extends React.Component {
       userId: user.uid
     })
 
-    this.state.features = [...this.state.features, newPoint]
-    console.log(this.state.features);
+    this.setState({
+      features: [...this.state.features, newPoint]
+    })
 
     this.props.firestore.collection('places').add(
       {
@@ -123,10 +123,6 @@ class MapControl extends React.Component {
 
     this.state.map.addLayer(pointsVectorLayer);
   }
-
-  // componentDidUpdate() {
-  //   this.getUserPoints();
-  // }
 
   render() {
     return (

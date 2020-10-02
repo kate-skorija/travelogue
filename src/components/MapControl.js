@@ -44,31 +44,48 @@ class MapControl extends React.Component {
         zoom: 2
       })
     });
+
+    
   
     map.on('click', this.handleMapClick.bind(this));
+
+    const displayMap = this.showPoints.bind(this, map);
   
     this.setState({
       map: map,
     });
-  }
 
-  
+  }
   
   handleMapClick(event) {
-    var coord = event.coordinate;
-    console.log(coord);
+    const coord = event.coordinate;
+    const transformedCoord = transform(coord, 'EPSG:3857', 'EPSG:4326');
+    console.log(transformedCoord);
 
     const user = firebase.auth().currentUser;
 
-    return this.props.firestore.collection('places').add(
+    this.props.firestore.collection('places').add(
       {
-        latitude: coord[0],
-        longitute: coord[1],
+        latitude: transformedCoord[1],
+        longitute: transformedCoord[0],
         userId: user.uid
       }
     );
-    
   }
+
+  showPoints(map) {
+    console.log("I'm bound!")
+    const user = firebase.auth().currentUser;
+    this.props.firestore.collection('points').where('userId', '==', user.uid).get()
+      .then(function(querySnapshot) {                                          
+        const result = querySnapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id }
+        }); 
+        console.log(result);
+        // displayData(result);
+      });
+  } 
+  
 
   render() {
     return (

@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import { Feature } from "ol";
 import { Point } from 'ol/geom'
 import { fromLonLat } from 'ol/proj';
+import { withFirestore } from 'react-redux-firebase'
 
 
 class MapControl extends React.Component {
@@ -23,18 +24,10 @@ class MapControl extends React.Component {
     super(props);
     this.state = {
       map: null,
-      featuresLayer: null,
-      points: []
     };
   }
   
   componentDidMount() {
-
-    const featuresLayer = new VectorLayer({
-      source: new VectorLayer({
-        features:[]
-      })
-    });
   
     const map = new Map({
       target: 'map',
@@ -45,7 +38,6 @@ class MapControl extends React.Component {
             layer: 'toner',
           }),
         }),
-        featuresLayer,
       ],
       view: new View({
         center: [0, 0],
@@ -57,15 +49,48 @@ class MapControl extends React.Component {
   
     this.setState({
       map: map,
-      featuresLayer: featuresLayer
     });
   }
+
+  
   
   handleMapClick(event) {
     var coord = event.coordinate;
     console.log(coord);
 
-    // var pointStyle = new Style({
+    const user = firebase.auth().currentUser;
+
+    return this.props.firestore.collection('places').add(
+      {
+        latitude: coord[0],
+        longitute: coord[1],
+        userId: user.uid
+      }
+    );
+    
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Nav />
+        <div className={styles.map} id='map'></div>
+      </React.Fragment>
+    )
+  }
+}
+
+export default withFirestore(MapControl);
+
+
+
+
+
+
+// --------------- Adding Points ------------------ //
+// in the handleMapClick:
+
+// var pointStyle = new Style({
     //   fill: new Fill({
     //     color: 'rgba(255, 255, 255, 0.2)',
     //   }),
@@ -80,83 +105,48 @@ class MapControl extends React.Component {
     //     }),
     //   }),
     // })
-    
     // var vectorSource = new VectorLayer({
     //   features: this.state.points
     // });
-
     // var pointsVectorLayer = new VectorLayer({
     //   source: vectorSource,
     //   style: pointStyle
     // })
-
     // this.setState({
     //   featuresLayer: pointsVectorLayer
     // })
-
     // const newPoint = new Feature({
     //     geometry: new Point(fromLonLat(coord)),
     //     name: "New Point",
     //   })
-    
-    this.state.points.push(new Feature({
-      geometry: new Point(fromLonLat(coord)),
-      name: "New Point",
-    }))
 
-    console.log(this.state.points)
+  // componentDidUpdate() {
+  //   const vectorSource = new VectorLayer({
+  //     features: this.state.points
+  //   })
 
-  }
-
-  
-  
-  componentDidUpdate() {
-
-    // const vectorSource = new VectorLayer({
-    //   features: this.state.points
-    // })
-
-    // this.state.featuresLayer = new VectorLayer({
-    //     source: vectorSource,
-    //     style: new Style({
-    //       fill: new Fill({
-    //         color: 'rgba(255, 255, 255, 0.2)',
-    //       }),
-    //       stroke: new Stroke({
-    //         color: '#ffcc33',
-    //         width: 2,
-    //       }),
-    //       image: new CircleStyle({
-    //         radius: 7,
-    //         fill: new Fill({
-    //           color: '#ffcc33',
-    //         }),
-    //       }),
-    //     })
-    //   })
-  }
-  
-  render() {
-    return (
-      <React.Fragment>
-        <Nav />
-        <div className={styles.map} id='map'></div>
-      </React.Fragment>
-    )
-  }
-}
-
-export default MapControl;
+  //   this.state.featuresLayer = new VectorLayer({
+  //       source: vectorSource,
+  //       style: new Style({
+  //         fill: new Fill({
+  //           color: 'rgba(255, 255, 255, 0.2)',
+  //         }),
+  //         stroke: new Stroke({
+  //           color: '#ffcc33',
+  //           width: 2,
+  //         }),
+  //         image: new CircleStyle({
+  //           radius: 7,
+  //           fill: new Fill({
+  //             color: '#ffcc33',
+  //           }),
+  //         }),
+  //       })
+  //     })
+  // }
 
 
-
-
-
-
-
-
-
-// Class Component
+// --------------- Class Component ---------------------//
 
 // class MapControl extends React.Component {
 
@@ -212,7 +202,7 @@ export default MapControl;
 //}
 
 
-// Functional Map with Hooks
+// ------------- Functional Map with Hooks -----------------//
 
 // function MapControl (props) {
 //   const [ map, setMap ] = useState();

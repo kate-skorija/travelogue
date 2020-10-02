@@ -48,8 +48,8 @@ class MapControl extends React.Component {
     
   
     map.on('click', this.handleMapClick.bind(this));
-
-    const displayMap = this.showPoints.bind(this, map);
+    // this.getUserPoints = this.getUserPoints.bind(this)
+    // this.getUserPoints();
   
     this.setState({
       map: map,
@@ -71,21 +71,57 @@ class MapControl extends React.Component {
         userId: user.uid
       }
     );
+    this.getUserPoints();
   }
 
-  showPoints(map) {
-    console.log("I'm bound!")
+  getUserPoints = () => {
+    console.log("get user points!")
     const user = firebase.auth().currentUser;
-    this.props.firestore.collection('points').where('userId', '==', user.uid).get()
+    const userPoints = this.props.firestore.collection('points').where('userId', '==', user.uid).get()
       .then(function(querySnapshot) {                                          
         const result = querySnapshot.docs.map((doc) => {
           return { ...doc.data(), id: doc.id }
         }); 
         console.log(result);
-        // displayData(result);
+        console.log(this);
+        // this.displayUserPoints(result)
       });
+      // this.displayUserPoints(userPoints);
   } 
-  
+
+  displayUserPoints(result) {
+    console.log("display user points!")
+    var pointStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.2)',
+      }),
+      stroke: new Stroke({
+        color: '#ffcc33',
+        width: 2,
+      }),
+      image: new CircleStyle({
+        radius: 7,
+        fill: new Fill({
+          color: '#ffcc33',
+        }),
+      }),
+    });
+
+    var vectorSource = new VectorLayer({
+      features: result
+    });
+
+    var pointsVectorLayer = new VectorLayer({
+      source: vectorSource,
+      style: pointStyle
+    });
+
+    this.state.map.addLayer(pointsVectorLayer);
+  }
+
+  // componentDidUpdate() {
+  //   this.getUserPoints();
+  // }
 
   render() {
     return (

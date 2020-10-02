@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect } from "react";
+import React from "react";
 import Nav from './Nav';
 import Map from 'ol/Map'
 import View from 'ol/View'
@@ -17,13 +17,13 @@ import { Point } from 'ol/geom'
 import { fromLonLat } from 'ol/proj';
 import { withFirestore } from 'react-redux-firebase'
 
-
 class MapControl extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       map: null,
+      features: []
     };
   }
   
@@ -45,11 +45,7 @@ class MapControl extends React.Component {
       })
     });
 
-    
-  
     map.on('click', this.handleMapClick.bind(this));
-    // this.getUserPoints = this.getUserPoints.bind(this)
-    // this.getUserPoints();
   
     this.setState({
       map: map,
@@ -64,6 +60,14 @@ class MapControl extends React.Component {
 
     const user = firebase.auth().currentUser;
 
+    const newPoint = new Feature({
+      geometry: new Point(coord),
+      userId: user.uid
+    })
+
+    this.state.features = [...this.state.features, newPoint]
+    console.log(this.state.features);
+
     this.props.firestore.collection('places').add(
       {
         latitude: transformedCoord[1],
@@ -71,26 +75,27 @@ class MapControl extends React.Component {
         userId: user.uid
       }
     );
-    this.getUserPoints();
+    
+    this.displayPoints();
   }
 
-  getUserPoints = () => {
-    console.log("get user points!")
-    const user = firebase.auth().currentUser;
-    const userPoints = this.props.firestore.collection('points').where('userId', '==', user.uid).get()
-      .then(function(querySnapshot) {                                          
-        const result = querySnapshot.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id }
-        }); 
-        console.log(result);
-        console.log(this);
-        // this.displayUserPoints(result)
-      });
-      // this.displayUserPoints(userPoints);
-  } 
+  // getUserPoints = () => {
+  //   console.log("get user points!")
+  //   const user = firebase.auth().currentUser;
+  //   this.props.firestore.collection('points').where('userId', '==', user.uid).get()
+  //     .then(function(querySnapshot) {      
+  //       console.log(querySnapshot)                                    
+  //       const result = querySnapshot.docs.map((doc) => {
+  //         return { ...doc.data(), id: doc.id }
+  //       }); 
+  //       console.log(result);
+  //       // this.displayUserPoints(result)
+  //     });
+  //     // this.displayUserPoints(userPoints);
+  // } 
 
-  displayUserPoints(result) {
-    console.log("display user points!")
+  displayPoints() {
+    console.log("display points!")
     var pointStyle = new Style({
       fill: new Fill({
         color: 'rgba(255, 255, 255, 0.2)',
@@ -107,8 +112,8 @@ class MapControl extends React.Component {
       }),
     });
 
-    var vectorSource = new VectorLayer({
-      features: result
+    var vectorSource = new VectorSource({
+      features: this.state.features
     });
 
     var pointsVectorLayer = new VectorLayer({
@@ -327,3 +332,123 @@ export default withFirestore(MapControl);
 // }
 
 // export default MapControl;
+
+
+// --------- Class Component with Methods ---------- //
+
+// class MapControl extends React.Component {
+
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       map: null,
+//     };
+//   }
+  
+//   componentDidMount() {
+  
+//     const map = new Map({
+//       target: 'map',
+//       controls: [],
+//       layers: [
+//         new TileLayer({
+//           source: new Stamen({
+//             layer: 'toner',
+//           }),
+//         }),
+//       ],
+//       view: new View({
+//         center: [0, 0],
+//         zoom: 2
+//       })
+//     });
+
+    
+  
+//     map.on('click', this.handleMapClick.bind(this));
+//     // this.getUserPoints = this.getUserPoints.bind(this)
+//     // this.getUserPoints();
+  
+//     this.setState({
+//       map: map,
+//     });
+
+//   }
+  
+//   handleMapClick(event) {
+//     const coord = event.coordinate;
+//     const transformedCoord = transform(coord, 'EPSG:3857', 'EPSG:4326');
+//     console.log(transformedCoord);
+
+//     const user = firebase.auth().currentUser;
+
+//     this.props.firestore.collection('places').add(
+//       {
+//         latitude: transformedCoord[1],
+//         longitute: transformedCoord[0],
+//         userId: user.uid
+//       }
+//     );
+//     this.getUserPoints();
+//   }
+
+//   getUserPoints = () => {
+//     console.log("get user points!")
+//     const user = firebase.auth().currentUser;
+//     const userPoints = this.props.firestore.collection('points').where('userId', '==', user.uid).get()
+//       .then(function(querySnapshot) {                                          
+//         const result = querySnapshot.docs.map((doc) => {
+//           return { ...doc.data(), id: doc.id }
+//         }); 
+//         console.log(result);
+//         console.log(this);
+//         // this.displayUserPoints(result)
+//       });
+//       // this.displayUserPoints(userPoints);
+//   } 
+
+//   displayUserPoints(result) {
+//     console.log("display user points!")
+//     var pointStyle = new Style({
+//       fill: new Fill({
+//         color: 'rgba(255, 255, 255, 0.2)',
+//       }),
+//       stroke: new Stroke({
+//         color: '#ffcc33',
+//         width: 2,
+//       }),
+//       image: new CircleStyle({
+//         radius: 7,
+//         fill: new Fill({
+//           color: '#ffcc33',
+//         }),
+//       }),
+//     });
+
+//     var vectorSource = new VectorLayer({
+//       features: result
+//     });
+
+//     var pointsVectorLayer = new VectorLayer({
+//       source: vectorSource,
+//       style: pointStyle
+//     });
+
+//     this.state.map.addLayer(pointsVectorLayer);
+//   }
+
+//   // componentDidUpdate() {
+//   //   this.getUserPoints();
+//   // }
+
+//   render() {
+//     return (
+//       <React.Fragment>
+//         <Nav />
+//         <div className={styles.map} id='map'></div>
+//       </React.Fragment>
+//     )
+//   }
+// }
+
+// export default withFirestore(MapControl);

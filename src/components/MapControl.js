@@ -19,20 +19,46 @@ import { withFirestore } from 'react-redux-firebase';
 import Select from 'ol/interaction/Select';
 import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 import 'ol/ol.css'
+import TileJSON from 'ol/source/TileJSON';
 
 class MapControl extends React.Component {
 
   constructor(props) {
+
     super(props);
     this.state = {
       map: null,
       features: [],
       selectedPoint: null
     };
+
+
   }
   
   componentDidMount() {
-  
+
+    const user = firebase.auth().currentUser;
+
+    const previousPoints = this.props.firestore.collection('places').where('userId', '==', user.uid).get()
+      .then((querySnapshot) => {                                    
+      const result = querySnapshot.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id }
+      })
+
+      console.log(result);
+
+      result.forEach((point) => {
+        const oldPoint = new Feature ({
+          geometry: new Point(point.longitude, point.latitude),
+          userId: point.uid
+        });
+
+        this.setState({
+          features: [...this.state.features, oldPoint]
+        });
+      });
+    })
+    
     const map = new Map({
       target: 'map',
       controls: [],
@@ -45,47 +71,21 @@ class MapControl extends React.Component {
       ],
       view: new View({
         center: [0, 0],
-        zoom: 2
+        zoom: 0
       })
     });
-
-    const popUpOverlay = new Overlay({
-      element: this.popup.nativeElement,
-      offset: [9,9]
-    });
-
-    map.addOverlay(popUpOverlay)
-
-    map.on('pointermove', this.handleFeatureClick.bind(this));
-
+    
     map.on('click', this.handleMapClick.bind(this));
   
     this.setState({
       map: map,
     });
-
   }
 
-  handleFeatureClick(event) {
-    let features = [];
-    this.map.forEachFeatureAtPixel(event.pixel,
-      (feature, layer) => {
-        features = feature.get('features');
-        const valuesToShow = [];
-        if (features && features.length > 0) {
-          valuesToShow.push(features.get('userId'));
-          this.popup.nativeElement.innerHTML = valuesToShow;
-          this.popup.nativeElement.hidden = false;
-          this.popupOverlay.setPosition(event.coordinate);
-        }
-
-      });
-    if (!features || features.length === 0) {
-      this.popup.nativeElement.innerHtml = '';
-      this.popup.nativeElement.hidden = true;
-    }
+  componentDidUpdate() {
+    this.displayPoints();
   }
-  
+
   handleMapClick(event) {
     const coord = event.coordinate;
     const transformedCoord = transform(coord, 'EPSG:3857', 'EPSG:4326');
@@ -104,30 +104,14 @@ class MapControl extends React.Component {
     this.props.firestore.collection('places').add(
       {
         latitude: transformedCoord[1],
-        longitute: transformedCoord[0],
+        longitude: transformedCoord[0],
         userId: user.uid
       }
     );
-    
-    this.displayPoints();
   }
 
-  // getUserPoints = () => {
-  //   console.log("get user points!")
-  //   const user = firebase.auth().currentUser;
-  //   this.props.firestore.collection('points').where('userId', '==', user.uid).get()
-  //     .then(function(querySnapshot) {      
-  //       console.log(querySnapshot)                                    
-  //       const result = querySnapshot.docs.map((doc) => {
-  //         return { ...doc.data(), id: doc.id }
-  //       }); 
-  //       console.log(result);
-  //       // this.displayUserPoints(result)
-  //     });
-  //     // this.displayUserPoints(userPoints);
-  // } 
-
   displayPoints() {
+    console.log(this.state.features);
     console.log("display points!")
     const pointStyle = new Style({
       fill: new Fill({
@@ -162,7 +146,7 @@ class MapControl extends React.Component {
       <React.Fragment>
         <Nav />
         <div className={styles.map} id='map'></div>
-        <div className="popup" hidden="true"></div>
+        <div className="popup" hidden={true}></div>
       </React.Fragment>
     )
   }
@@ -171,7 +155,12 @@ class MapControl extends React.Component {
 export default withFirestore(MapControl);
 
 
+// -------------- Alternative Map -------------------//
 
+ // source: new TileJSON({
+  //   url: 'https://a.tiles.mapbox.com/v3/aj.1x1-degrees.json?secure=1',
+  //   crossOrigin: '',
+  // }),
 
 
 

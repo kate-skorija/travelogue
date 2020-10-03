@@ -12,10 +12,13 @@ import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import { useFirestore } from 'react-redux-firebase';
 import firebase from "firebase/app";
 import PropTypes from 'prop-types';
-import { Feature } from "ol";
+import { Feature, Overlay } from "ol";
 import { Point } from 'ol/geom'
 import { fromLonLat } from 'ol/proj';
-import { withFirestore } from 'react-redux-firebase'
+import { withFirestore } from 'react-redux-firebase';
+import Select from 'ol/interaction/Select';
+import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
+import 'ol/ol.css'
 
 class MapControl extends React.Component {
 
@@ -23,7 +26,8 @@ class MapControl extends React.Component {
     super(props);
     this.state = {
       map: null,
-      features: []
+      features: [],
+      selectedPoint: null
     };
   }
   
@@ -45,12 +49,41 @@ class MapControl extends React.Component {
       })
     });
 
+    const popUpOverlay = new Overlay({
+      element: this.popup.nativeElement,
+      offset: [9,9]
+    });
+
+    map.addOverlay(popUpOverlay)
+
+    map.on('pointermove', this.handleFeatureClick.bind(this));
+
     map.on('click', this.handleMapClick.bind(this));
   
     this.setState({
       map: map,
     });
 
+  }
+
+  handleFeatureClick(event) {
+    let features = [];
+    this.map.forEachFeatureAtPixel(event.pixel,
+      (feature, layer) => {
+        features = feature.get('features');
+        const valuesToShow = [];
+        if (features && features.length > 0) {
+          valuesToShow.push(features.get('userId'));
+          this.popup.nativeElement.innerHTML = valuesToShow;
+          this.popup.nativeElement.hidden = false;
+          this.popupOverlay.setPosition(event.coordinate);
+        }
+
+      });
+    if (!features || features.length === 0) {
+      this.popup.nativeElement.innerHtml = '';
+      this.popup.nativeElement.hidden = true;
+    }
   }
   
   handleMapClick(event) {
@@ -96,7 +129,7 @@ class MapControl extends React.Component {
 
   displayPoints() {
     console.log("display points!")
-    var pointStyle = new Style({
+    const pointStyle = new Style({
       fill: new Fill({
         color: 'rgba(255, 255, 255, 0.2)',
       }),
@@ -112,11 +145,11 @@ class MapControl extends React.Component {
       }),
     });
 
-    var vectorSource = new VectorSource({
+    const vectorSource = new VectorSource({
       features: this.state.features
     });
 
-    var pointsVectorLayer = new VectorLayer({
+    const pointsVectorLayer = new VectorLayer({
       source: vectorSource,
       style: pointStyle
     });
@@ -129,6 +162,7 @@ class MapControl extends React.Component {
       <React.Fragment>
         <Nav />
         <div className={styles.map} id='map'></div>
+        <div className="popup" hidden="true"></div>
       </React.Fragment>
     )
   }
@@ -448,3 +482,26 @@ export default withFirestore(MapControl);
 // }
 
 // export default withFirestore(MapControl);
+
+// ---------- Select Element ------------------- //
+
+ // var selectClick = new Select({
+    //   condition: click,
+    // });
+
+    // var selectPoint = function() {
+    //   var value = selectElement.value;
+    //   if (value == 'click') {
+    //     select = selectClick;
+    //   } else {
+    //     select = null;
+    //   }
+    //   if (select !== null) {
+    //     map.addInteraction(select);
+    //     select.on('select', function(event) {
+    //       console.log("selected!")
+    //     })
+    //   }
+    // }
+
+    // selectPoint();

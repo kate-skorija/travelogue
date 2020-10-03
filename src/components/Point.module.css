@@ -1,9 +1,0 @@
-.point {
-  cursor: pointer;
-  position: absolute;
-  width: .8rem;
-  height: .8rem;
-  background-color: #414052;
-  border-radius: 50%;
-  box-shadow: 0 0 0 0 black;
-}

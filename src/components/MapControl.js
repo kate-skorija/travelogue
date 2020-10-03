@@ -9,12 +9,9 @@ import {transform} from 'ol/proj'
 import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
-import { useFirestore } from 'react-redux-firebase';
 import firebase from "firebase/app";
-import PropTypes from 'prop-types';
 import { Feature, Overlay } from "ol";
 import { Point } from 'ol/geom'
-import { fromLonLat } from 'ol/proj';
 import { withFirestore } from 'react-redux-firebase';
 import Select from 'ol/interaction/Select';
 import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
@@ -24,28 +21,23 @@ import TileJSON from 'ol/source/TileJSON';
 class MapControl extends React.Component {
 
   constructor(props) {
-
     super(props);
     this.state = {
       map: null,
-      features: [],
-      selectedPoint: null
+      features: []
     };
-
-
   }
   
   componentDidMount() {
 
+    // Get user's previously added points from firestore and add them to features array
     const user = firebase.auth().currentUser;
-
+    
     const previousPoints = this.props.firestore.collection('places').where('userId', '==', user.uid).get()
       .then((querySnapshot) => {                                    
       const result = querySnapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id }
       })
-
-      console.log(result);
 
       result.forEach((point) => {
         const oldPoint = new Feature ({
@@ -58,7 +50,9 @@ class MapControl extends React.Component {
         });
       });
     });
-    
+
+    // Create intial Map
+
     const map = new Map({
       target: 'map',
       controls: [],
@@ -74,12 +68,12 @@ class MapControl extends React.Component {
         zoom: 0
       })
     });
-    
-    map.on('click', this.handleMapClick.bind(this));
-  
+
     this.setState({
       map: map,
     });
+    
+    map.on('click', this.handleMapClick.bind(this));
   }
 
   componentDidUpdate() {
@@ -93,35 +87,53 @@ class MapControl extends React.Component {
 
     const user = firebase.auth().currentUser;
 
-    const newPoint = new Feature({
-      geometry: new Point(rawCoord),
-      userId: user.uid
-    })
 
-    this.setState({
-      features: [...this.state.features, newPoint]
-    })
+    const popup = new Overlay({
+      element: document.getElementById('popup')
+    });
 
-    this.props.firestore.collection('places').add(
-      {
-        lat: rawCoord[1],
-        long: rawCoord[0],
-        latitude: transformedCoord[1],
-        longitude: transformedCoord[0],
-        userId: user.uid
-      }
+    let featuresAtClick = []
+    this.state.map.forEachFeatureAtPixel(event.pixel, 
+      (feature, layer) => {
+        featuresAtClick.push(feature);
+        if(featuresAtClick && featuresAtClick.length > 0) {
+          popup.innerHtml = "Pop up, bitch!";
+          popup.hidden = false;
+          popup.setPosition(rawCoord)
+        }
+      },
+      {hitTolerance: 4}
     );
+
+    if (!featuresAtClick || featuresAtClick.length === 0 ){
+      const newPoint = new Feature({
+        geometry: new Point(rawCoord),
+        userId: user.uid
+      })
+  
+      this.setState({
+        features: [...this.state.features, newPoint]
+      })
+  
+      this.props.firestore.collection('places').add(
+        {
+          lat: rawCoord[1],
+          long: rawCoord[0],
+          latitude: transformedCoord[1],
+          longitude: transformedCoord[0],
+          userId: user.uid
+        }
+      );
+    }
   }
 
   displayPoints() {
-    console.log(this.state.features);
-    console.log("display points!")
     const pointStyle = new Style({
       fill: new Fill({
         color: 'rgba(255, 255, 255, 0.2)',
       }),
       stroke: new Stroke({
-        color: '#ffcc33',
+        color: 'blue',
         width: 2,
       }),
       image: new CircleStyle({
@@ -149,7 +161,7 @@ class MapControl extends React.Component {
       <React.Fragment>
         <Nav />
         <div className={styles.map} id='map'></div>
-        <div className="popup" hidden={true}></div>
+        <div id='popup' className="popup" hidden={true}></div>
       </React.Fragment>
     )
   }
@@ -166,120 +178,29 @@ export default withFirestore(MapControl);
   // }),
 
 
+// ---------- Select Element ------------------- //
 
-// --------------- Adding Points ------------------ //
-// in the handleMapClick:
-
-// var pointStyle = new Style({
-    //   fill: new Fill({
-    //     color: 'rgba(255, 255, 255, 0.2)',
-    //   }),
-    //   stroke: new Stroke({
-    //     color: '#ffcc33',
-    //     width: 2,
-    //   }),
-    //   image: new CircleStyle({
-    //     radius: 7,
-    //     fill: new Fill({
-    //       color: '#ffcc33',
-    //     }),
-    //   }),
-    // })
-    // var vectorSource = new VectorLayer({
-    //   features: this.state.points
+ // var selectClick = new Select({
+    //   condition: click,
     // });
-    // var pointsVectorLayer = new VectorLayer({
-    //   source: vectorSource,
-    //   style: pointStyle
-    // })
-    // this.setState({
-    //   featuresLayer: pointsVectorLayer
-    // })
-    // const newPoint = new Feature({
-    //     geometry: new Point(fromLonLat(coord)),
-    //     name: "New Point",
-    //   })
 
-  // componentDidUpdate() {
-  //   const vectorSource = new VectorLayer({
-  //     features: this.state.points
-  //   })
+    // var selectPoint = function() {
+    //   var value = selectElement.value;
+    //   if (value == 'click') {
+    //     select = selectClick;
+    //   } else {
+    //     select = null;
+    //   }
+    //   if (select !== null) {
+    //     map.addInteraction(select);
+    //     select.on('select', function(event) {
+    //       console.log("selected!")
+    //     })
+    //   }
+    // }
 
-  //   this.state.featuresLayer = new VectorLayer({
-  //       source: vectorSource,
-  //       style: new Style({
-  //         fill: new Fill({
-  //           color: 'rgba(255, 255, 255, 0.2)',
-  //         }),
-  //         stroke: new Stroke({
-  //           color: '#ffcc33',
-  //           width: 2,
-  //         }),
-  //         image: new CircleStyle({
-  //           radius: 7,
-  //           fill: new Fill({
-  //             color: '#ffcc33',
-  //           }),
-  //         }),
-  //       })
-  //     })
-  // }
+    // selectPoint();
 
-
-// --------------- Class Component ---------------------//
-
-// class MapControl extends React.Component {
-
-// constructor(props) {
-//   super(props);
-//   this.state = {};
-// }
-
-// componentDidMount() {
-//   const featuresLayer = new VectorLayer({
-//     source: new VectorSource({
-//       features:[]
-//     })
-//   });
-
-//   const map = new Map({
-//     target: 'map',
-//     layers: [
-//       new TileLayer({
-//         source: new Stamen({
-//           layer: 'toner',
-//         }),
-//       }),
-//       featuresLayer
-//     ],
-//     view: new View({
-//       center: [0, 0],
-//       zoom: 2
-//     })
-//   });
-
-//   map.on('click', this.handleMapClick.bind(this));
-
-//   this.setState({
-//     map: map,
-//     featuresLayer: featuresLayer
-//   });
-// }
-
-// handleMapClick() {
-//   console.log("Map clicked!")
-// }
-
-
-// render() {
-//   return (
-//     <React.Fragment>
-//       <Nav />
-//       <div className={styles.map} id='map'></div>
-//     </React.Fragment>
-//   )
-// }
-//}
 
 
 // ------------- Functional Map with Hooks -----------------//
@@ -354,146 +275,3 @@ export default withFirestore(MapControl);
 // }
 
 // export default MapControl;
-
-
-// --------- Class Component with Methods ---------- //
-
-// class MapControl extends React.Component {
-
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       map: null,
-//     };
-//   }
-  
-//   componentDidMount() {
-  
-//     const map = new Map({
-//       target: 'map',
-//       controls: [],
-//       layers: [
-//         new TileLayer({
-//           source: new Stamen({
-//             layer: 'toner',
-//           }),
-//         }),
-//       ],
-//       view: new View({
-//         center: [0, 0],
-//         zoom: 2
-//       })
-//     });
-
-    
-  
-//     map.on('click', this.handleMapClick.bind(this));
-//     // this.getUserPoints = this.getUserPoints.bind(this)
-//     // this.getUserPoints();
-  
-//     this.setState({
-//       map: map,
-//     });
-
-//   }
-  
-//   handleMapClick(event) {
-//     const coord = event.coordinate;
-//     const transformedCoord = transform(coord, 'EPSG:3857', 'EPSG:4326');
-//     console.log(transformedCoord);
-
-//     const user = firebase.auth().currentUser;
-
-//     this.props.firestore.collection('places').add(
-//       {
-//         latitude: transformedCoord[1],
-//         longitute: transformedCoord[0],
-//         userId: user.uid
-//       }
-//     );
-//     this.getUserPoints();
-//   }
-
-//   getUserPoints = () => {
-//     console.log("get user points!")
-//     const user = firebase.auth().currentUser;
-//     const userPoints = this.props.firestore.collection('points').where('userId', '==', user.uid).get()
-//       .then(function(querySnapshot) {                                          
-//         const result = querySnapshot.docs.map((doc) => {
-//           return { ...doc.data(), id: doc.id }
-//         }); 
-//         console.log(result);
-//         console.log(this);
-//         // this.displayUserPoints(result)
-//       });
-//       // this.displayUserPoints(userPoints);
-//   } 
-
-//   displayUserPoints(result) {
-//     console.log("display user points!")
-//     var pointStyle = new Style({
-//       fill: new Fill({
-//         color: 'rgba(255, 255, 255, 0.2)',
-//       }),
-//       stroke: new Stroke({
-//         color: '#ffcc33',
-//         width: 2,
-//       }),
-//       image: new CircleStyle({
-//         radius: 7,
-//         fill: new Fill({
-//           color: '#ffcc33',
-//         }),
-//       }),
-//     });
-
-//     var vectorSource = new VectorLayer({
-//       features: result
-//     });
-
-//     var pointsVectorLayer = new VectorLayer({
-//       source: vectorSource,
-//       style: pointStyle
-//     });
-
-//     this.state.map.addLayer(pointsVectorLayer);
-//   }
-
-//   // componentDidUpdate() {
-//   //   this.getUserPoints();
-//   // }
-
-//   render() {
-//     return (
-//       <React.Fragment>
-//         <Nav />
-//         <div className={styles.map} id='map'></div>
-//       </React.Fragment>
-//     )
-//   }
-// }
-
-// export default withFirestore(MapControl);
-
-// ---------- Select Element ------------------- //
-
- // var selectClick = new Select({
-    //   condition: click,
-    // });
-
-    // var selectPoint = function() {
-    //   var value = selectElement.value;
-    //   if (value == 'click') {
-    //     select = selectClick;
-    //   } else {
-    //     select = null;
-    //   }
-    //   if (select !== null) {
-    //     map.addInteraction(select);
-    //     select.on('select', function(event) {
-    //       console.log("selected!")
-    //     })
-    //   }
-    // }
-
-    // selectPoint();

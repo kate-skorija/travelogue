@@ -49,15 +49,15 @@ class MapControl extends React.Component {
 
       result.forEach((point) => {
         const oldPoint = new Feature ({
-          geometry: new Point(point.longitude, point.latitude),
-          userId: point.uid
+          geometry: new Point([point.long, point.lat]),
+          userId: point.userId
         });
 
         this.setState({
           features: [...this.state.features, oldPoint]
         });
       });
-    })
+    });
     
     const map = new Map({
       target: 'map',
@@ -87,13 +87,14 @@ class MapControl extends React.Component {
   }
 
   handleMapClick(event) {
-    const coord = event.coordinate;
-    const transformedCoord = transform(coord, 'EPSG:3857', 'EPSG:4326');
+    const rawCoord = event.coordinate;
+    console.log(rawCoord);
+    const transformedCoord = transform(rawCoord, 'EPSG:3857', 'EPSG:4326');
 
     const user = firebase.auth().currentUser;
 
     const newPoint = new Feature({
-      geometry: new Point(coord),
+      geometry: new Point(rawCoord),
       userId: user.uid
     })
 
@@ -103,6 +104,8 @@ class MapControl extends React.Component {
 
     this.props.firestore.collection('places').add(
       {
+        lat: rawCoord[1],
+        long: rawCoord[0],
         latitude: transformedCoord[1],
         longitude: transformedCoord[0],
         userId: user.uid

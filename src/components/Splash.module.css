@@ -1,0 +1,50 @@
+.splash {
+  background-color: black;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.splash h1 {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -90%);
+  font-family: 'Arial', 'sans-serif';
+  font-size: 200px;
+}
+
+.splashContent {
+  font-family: 'Arimo', sans-serif;
+  font-size: 30px;
+  width: 650px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-75%, 0%);
+}
+
+.splashContent a {
+  text-decoration: none;
+  font-size: 20px;
+  color: black;
+}
+
+.splashContent button {
+  background-color: #ffcc33;
+  border: none;
+  margin: 10px;
+  padding: 15px 40px;
+  cursor: pointer;
+}
+
+.splashContent button:hover {
+  background-color: blue;
+  border: none;
+  margin: 10px;
+  padding: 15px 40px;
+}
+

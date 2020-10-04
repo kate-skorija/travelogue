@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import firebase from "firebase/app";
 import { Link } from 'react-router-dom';
+import styles from './Logout.module.css';
 
 function Logout() {
 
@@ -17,9 +18,14 @@ function Logout() {
 
   return (
       <React.Fragment>
-        <h3>Thanks for using Travelogue. See you again soon.</h3>
-        {loggedIn ? <button onClick={doLogout}>Log Out</button> : <h4>You have successfully logged out!</h4>}
-        <button><Link to='/'>Back to Travelogue</Link></button>
+        <div className={styles.logout}>
+          <div className={styles.logoutContent}>
+            <h3>Thanks for using Travelogue.</h3>
+            <h3> See you again soon.</h3>
+            {loggedIn ? <button onClick={doLogout}>Log Out</button> : <h4>You have successfully logged out!</h4>}
+            <button><Link to='/'>Back to Travelogue</Link></button>
+          </div>
+        </div>
       </React.Fragment>
   )
 }

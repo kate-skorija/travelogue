@@ -1,0 +1,43 @@
+.logout {
+  background-color: black;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.logoutContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  text-align: center;
+  font-family: 'Arimo', sans-serif;
+}
+
+.logoutContent h3 {
+  font-size: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+.logoutContent button{
+  background-color: #ffcc33;
+  border: none;
+  margin: 10px;
+  padding: 15px 40px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+  margin-top: 30px;
+}
+
+.logoutContent button:hover {
+  background-color: blue;
+}
+
+.logoutContent a {
+  text-decoration: none;
+  color: black;
+}

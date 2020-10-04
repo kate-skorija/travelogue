@@ -1,0 +1,51 @@
+.login {
+  background-color: black;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.loginContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  text-align: center;
+  font-family: 'Arimo', sans-serif;
+}
+
+.loginContent h1 {
+  font-family: 'Arial', 'sans-serif';
+  font-size: 70px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.loginContent p {
+  font-size: 23px;
+}
+
+.loginContent input {
+  display: block;
+  width: 375px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.loginContent button {
+  background-color: #ffcc33;
+  border: none;
+  margin: 10px;
+  padding: 15px 40px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+}
+
+.loginContent button:hover {
+  background-color: blue;
+}

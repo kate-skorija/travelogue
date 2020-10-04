@@ -1,6 +1,7 @@
 import React from "react";
 import firebase from "firebase/app";
 import { withRouter } from 'react-router-dom';
+import styles from './Login.module.css';
 
 const Login = ({history}) => {  
 
@@ -17,19 +18,23 @@ const Login = ({history}) => {
 
   return (
     <React.Fragment>
-      <h1>Travelogue</h1>
-      <p>Log in to your account.</p>
-      <form onSubmit={doLogin}>
-        <input
-          type='text'
-          name='signinEmail'
-          placeholder='email' />
-        <input
-          type='password'
-          name='signinPassword'
-          placeholder='Password' />
-        <button type='submit'>Log In</button>
-      </form>
+      <div className={styles.login}>
+        <div className={styles.loginContent}>
+          <h1>Travelogue</h1>
+          <p>Log in to your account.</p>
+          <form onSubmit={doLogin}>
+            <input
+              type='text'
+              name='signinEmail'
+              placeholder='email' />
+            <input
+              type='password'
+              name='signinPassword'
+              placeholder='password' />
+            <button type='submit'>Log In</button>
+          </form>
+        </div>
+      </div>
     </React.Fragment>
   );
 }

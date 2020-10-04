@@ -5,7 +5,7 @@ import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import {transform} from 'ol/proj'
+import {transform, fromLonLat} from 'ol/proj'
 import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
@@ -64,7 +64,7 @@ class MapControl extends React.Component {
         }),
       ],
       view: new View({
-        center: [0, 0],
+        center: fromLonLat([11, 20]),
         zoom: 0
       })
     });
@@ -82,9 +82,8 @@ class MapControl extends React.Component {
 
   handleMapClick(event) {
     const rawCoord = event.coordinate;
-    console.log(rawCoord);
     const transformedCoord = transform(rawCoord, 'EPSG:3857', 'EPSG:4326');
-
+    console.log(transformedCoord);
     const user = firebase.auth().currentUser;
 
 
@@ -159,9 +158,11 @@ class MapControl extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Nav />
-        <div className={styles.map} id='map'></div>
-        <div id='popup' className="popup" hidden={true}></div>
+        <div className={styles.wrapper}>
+          <Nav />
+          <div className={styles.map} id='map'></div>
+          <div id='popup' className="popup" hidden={true}></div>
+        </div>
       </React.Fragment>
     )
   }

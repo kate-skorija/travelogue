@@ -5,46 +5,39 @@
 ### By Kate Skorija
 <br>
 
-![]()
+![Splash Page](./public/splash.png)
 
 ## Description
 Travelogue is a visual resource for users to keep track of places they’ve been, and places they would like to go.
-Users can explore a world map and place pins on locations, updating the pins with notes and photos as they wish.
+Users can explore a world map and place pins on locations, updating the pins with notes and photos as they wish. It is being built with JavaScript, React, OpenLayers API, and Firebase.
 
-<br><br>
+<br>
 
-## Component Diagram
+## Figma Mockups
 
 ![Component Diagram](./public/Wireframing.png)
-<br><br>
+<br>
 
-## User Interface
-
-These will be updated with screenshots of the project.
-
-![]()
-
-![]()
-
-![]()
+<!-- ## User Interface -->
 
 ## User Stories
-*  Allow users to navigate a world map easily (zoom, pan, etc)
-*  Allow users to place pins on map to mark places they’ve been and add another color of pin for places they would like to go
-*  Allow users to click on a placed pin and add/update/review notes they’ve made about that place (what to see/what they have seen, restaurants, people they met or traveled with, etc.)
+*  Users can navigate a world map easily (zoom, pan, etc).
+*  Users can to place pins on map to mark places they’ve been and places they would like to go.
+*  Users can login to view previously saved pins.
+*  Users can click on a placed pin and add/update/review notes they’ve made about that place.
 
-<br><br>
+<br>
 
 ## Known Bugs
 
-There are no known bugs at this time.
+Currently a user can login, explore a world map, and place pins that are saved to their account. I am working on adding functionality for adding notes when pins are clicked on.
  
-<br><br>
+<br>
 
 ## Support and Contact Details
 
 If there are any issues or questions, please reach out to me through [my GitHub account](https://github.com/kate-skorija).
-<br><br>
+<br>
 
 ## Technologies Used
 
@@ -58,7 +51,6 @@ If there are any issues or questions, please reach out to me through [my GitHub 
 *  Stamen (map tiles)
 *  Webpack
 *  npm
-*  Jest
 <br><br>
 
 ## Available Scripts

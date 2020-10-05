@@ -18,6 +18,7 @@ import Select from 'ol/interaction/Select';
 import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 import 'ol/ol.css'
 import TileJSON from 'ol/source/TileJSON';
+import { Modal } from 'react-bootstrap';
 
 class MapControl extends React.Component {
 
@@ -26,7 +27,7 @@ class MapControl extends React.Component {
     this.state = {
       map: null,
       features: [],
-      popupVisible: false
+      modalVisible: false
     };
   }
   
@@ -106,7 +107,7 @@ class MapControl extends React.Component {
         featuresAtClick.push(feature);
         if(featuresAtClick && featuresAtClick.length > 0) {
           this.setState({
-            popupVisible: true
+            modalVisible: true
           })
           // popup.innerHtml = "Pop up, bitch!";
           // popup.hidden = false;
@@ -167,13 +168,33 @@ class MapControl extends React.Component {
     this.state.map.addLayer(pointsVectorLayer);
   }
 
+  hideModal = () => {
+    this.setState({ modalVisible: false })
+  }
+
+
+  
   render() {
+    let featureModal = null;
+    if (this.state.modalVisible) {
+      featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Place Name</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo! Modal showing!</Modal.Body>
+        <Modal.Footer>
+          <button onClick={this.hideModal}>Close</button>
+          <button onClick={this.hideModal}>Save Changes</button>
+        </Modal.Footer>
+      </Modal>
+    }
     return (
       <React.Fragment>
         <div className={styles.wrapper}>
           <Nav />
           <div className={styles.map} id='map'></div>
-          <div id='popup' className="popup" hidden={true}></div>
+          {featureModal}
+          {/* <div id='popup' className="popup" hidden={true}></div> */}
         </div>
       </React.Fragment>
     )

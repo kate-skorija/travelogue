@@ -1,15 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
-import { Feature } from "ol";
 
 function NewPlaceForm(props){
 
-  const { place } = props;
-
   function handleNewPlaceSubmission(event) {
     event.preventDeafult();
-    props.onPlaceCreation({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, featureId: place.get('featureId')})
+    props.onPlaceCreation({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, featureId: props.id})
   }
 
   return (
@@ -42,7 +39,8 @@ function NewPlaceForm(props){
 NewPlaceForm.propTypes = {
   onHide: PropTypes.func,
   onShow: PropTypes.bool,
-  onPlaceCreation: PropTypes.func
+  onPlaceCreation: PropTypes.func,
+  id: PropTypes.string
 }
 
 export default NewPlaceForm;

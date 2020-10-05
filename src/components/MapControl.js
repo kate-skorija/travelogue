@@ -1,3 +1,4 @@
+
 import React from "react";
 import Nav from './Nav';
 import Map from 'ol/Map'
@@ -11,6 +12,7 @@ import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import firebase from "firebase/app";
+// import firebase from 'firebase';
 import { Feature } from "ol";
 import { Point } from 'ol/geom'
 import { withFirestore } from 'react-redux-firebase';
@@ -21,7 +23,7 @@ import TileJSON from 'ol/source/TileJSON';
 import { Modal } from 'react-bootstrap';
 import NewPlaceForm from './NewPlaceForm';
 import { v4 } from 'uuid';
-
+import 'firebase/auth';
 
 class MapControl extends React.Component {
 
@@ -31,11 +33,14 @@ class MapControl extends React.Component {
       map: null,
       features: [],
       modalVisible: false,
-      selectedFeature: null
+      selectedFeature: null,
+      user: null
     };
   }
   
   componentDidMount() {
+
+    
 
     // Get user's previously added points from firestore and add them to features array
     const user = firebase.auth().currentUser;
@@ -177,19 +182,19 @@ class MapControl extends React.Component {
     })
   }
 
+  handleNewPlaceFormSubmission = (event) => {
+    event.preventDeafult();
+    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, featureId: this.state.selectedFeature.get('featureId'), userId: this.state.selectedFeature.get('userId') })
+  }
 
   hideModal = () => {
     this.setState({ modalVisible: false })
   }
 
-
-
-  
   render() {
     let featureModal = null;
     if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
-      console.log(this.state.selectedFeature);
-      console.log(featureModal);
+      console.log("Place Details");
       featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>
         <Modal.Header closeButton>
           <Modal.Title>Place Name</Modal.Title>
@@ -201,9 +206,29 @@ class MapControl extends React.Component {
         </Modal.Footer>
       </Modal>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
-      console.log(this.state.modalVisible);
-      featureModal = <NewPlaceForm place={this.state.selectedFeature} onShow={this.state.modalVisiable} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} />
-      console.log(featureModal);
+      featureModal = 
+      // featureModal = <NewPlaceForm onShow={this.state.modalVisiable} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} id={this.state.selectedFeature.get('featureId')} />
+      <Modal show={this.state.modalVisible} onHide={this.hideModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Add a New Place</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={this.handleNewPlaceSubmission}>
+          <input
+            type='text'
+            name='name'
+            placeholder='Name of Place' 
+            required />
+          <input
+            type='text'
+            name='country'
+            placeholder='Country' />
+          <textarea
+            name='notes'/>
+          <button type='submit'>Save</button>
+        </form>
+      </Modal.Body>
+    </Modal>
     }
     return (
       <React.Fragment>

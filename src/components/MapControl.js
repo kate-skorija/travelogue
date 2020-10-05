@@ -27,7 +27,8 @@ class MapControl extends React.Component {
     this.state = {
       map: null,
       features: [],
-      modalVisible: false
+      modalVisible: false,
+      selectedFeature: null
     };
   }
   
@@ -91,15 +92,7 @@ class MapControl extends React.Component {
   handleMapClick(event) {
     const rawCoord = event.coordinate;
     const transformedCoord = transform(rawCoord, 'EPSG:3857', 'EPSG:4326');
-    console.log(transformedCoord);
     const user = firebase.auth().currentUser;
-
-
-    const popup = new Overlay({
-      element: document.getElementById('popup')
-    });
-
-    this.state.map.addOverlay(popup);
 
     let featuresAtClick = []
     this.state.map.forEachFeatureAtPixel(event.pixel, 
@@ -107,11 +100,9 @@ class MapControl extends React.Component {
         featuresAtClick.push(feature);
         if(featuresAtClick && featuresAtClick.length > 0) {
           this.setState({
-            modalVisible: true
+            modalVisible: true,
+            selectedFeature: feature
           })
-          // popup.innerHtml = "Pop up, bitch!";
-          // popup.hidden = false;
-          // console.log("there should be a pop up!")
         }
       },
       {hitTolerance: 4}
@@ -120,11 +111,14 @@ class MapControl extends React.Component {
     if (!featuresAtClick || featuresAtClick.length === 0 ){
       const newPoint = new Feature({
         geometry: new Point(rawCoord),
-        userId: user.uid
+        userId: user.uid,
+        name: null,
+        country: null,
+        notes: null
       })
   
       this.setState({
-        features: [...this.state.features, newPoint]
+        features: [...this.state.features, newPoint],
       })
   
       this.props.firestore.collection('places').add(
@@ -168,6 +162,7 @@ class MapControl extends React.Component {
     this.state.map.addLayer(pointsVectorLayer);
   }
 
+
   hideModal = () => {
     this.setState({ modalVisible: false })
   }
@@ -177,11 +172,12 @@ class MapControl extends React.Component {
   render() {
     let featureModal = null;
     if (this.state.modalVisible) {
+      console.log(this.state.selectedFeature)
       featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>
         <Modal.Header closeButton>
           <Modal.Title>Place Name</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo! Modal showing!</Modal.Body>
+        <Modal.Body>Woohoo! Modal showing!{this.state.selectedFeature.get('userId')}</Modal.Body>
         <Modal.Footer>
           <button className="btn btn-warning" onClick={this.hideModal}>Close</button>
           <button className="btn btn-warning" onClick={this.hideModal}>Save Changes</button>

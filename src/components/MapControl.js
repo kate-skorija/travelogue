@@ -6,6 +6,7 @@ import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import {transform, fromLonLat} from 'ol/proj'
+import { Zoom } from 'ol/control';
 import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
@@ -55,7 +56,11 @@ class MapControl extends React.Component {
 
     const map = new Map({
       target: 'map',
-      controls: [],
+      controls: [
+        new Zoom({
+          className: 'zoom'
+        })
+      ],
       layers: [
         new TileLayer({
           source: new Stamen({
@@ -74,6 +79,7 @@ class MapControl extends React.Component {
     });
     
     map.on('click', this.handleMapClick.bind(this));
+
   }
 
   componentDidUpdate() {

@@ -10,10 +10,11 @@
 .h1 {
   font-family: 'Arial', sans-serif;
   color: white;
-  text-shadow: -4px 4px 0px blue;
-  /* -6px 6px 0px red,
-  -9px 9px 0px #00bdbd; */
+  text-shadow: -4px 4px 0px #04047c,
+  -6px 6px 0px blue;
+  /* -9px 9px 0px #00bdbd; */ 
   margin-left: 10px;
+  font-size: 37px;
 }
 
 .navButton {

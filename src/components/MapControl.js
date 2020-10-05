@@ -25,7 +25,8 @@ class MapControl extends React.Component {
     super(props);
     this.state = {
       map: null,
-      features: []
+      features: [],
+      popupVisible: false
     };
   }
   
@@ -97,14 +98,19 @@ class MapControl extends React.Component {
       element: document.getElementById('popup')
     });
 
+    this.state.map.addOverlay(popup);
+
     let featuresAtClick = []
     this.state.map.forEachFeatureAtPixel(event.pixel, 
       (feature, layer) => {
         featuresAtClick.push(feature);
         if(featuresAtClick && featuresAtClick.length > 0) {
-          popup.innerHtml = "Pop up, bitch!";
-          popup.hidden = false;
-          popup.setPosition(rawCoord)
+          this.setState({
+            popupVisible: true
+          })
+          // popup.innerHtml = "Pop up, bitch!";
+          // popup.hidden = false;
+          // console.log("there should be a pop up!")
         }
       },
       {hitTolerance: 4}
@@ -176,13 +182,6 @@ class MapControl extends React.Component {
 
 export default withFirestore(MapControl);
 
-
-// -------------- Alternative Map -------------------//
-
- // source: new TileJSON({
-  //   url: 'https://a.tiles.mapbox.com/v3/aj.1x1-degrees.json?secure=1',
-  //   crossOrigin: '',
-  // }),
 
 
 // ---------- Select Element ------------------- //

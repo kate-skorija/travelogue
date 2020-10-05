@@ -183,8 +183,8 @@ class MapControl extends React.Component {
         </Modal.Header>
         <Modal.Body>Woohoo! Modal showing!</Modal.Body>
         <Modal.Footer>
-          <button onClick={this.hideModal}>Close</button>
-          <button onClick={this.hideModal}>Save Changes</button>
+          <button className="btn btn-warning" onClick={this.hideModal}>Close</button>
+          <button className="btn btn-warning" onClick={this.hideModal}>Save Changes</button>
         </Modal.Footer>
       </Modal>
     }
@@ -194,7 +194,6 @@ class MapControl extends React.Component {
           <Nav />
           <div className={styles.map} id='map'></div>
           {featureModal}
-          {/* <div id='popup' className="popup" hidden={true}></div> */}
         </div>
       </React.Fragment>
     )

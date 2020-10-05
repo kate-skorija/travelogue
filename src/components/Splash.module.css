@@ -36,15 +36,12 @@
 .splashContent button {
   background-color: #ffcc33;
   border: none;
-  margin: 10px;
-  padding: 15px 40px;
+  margin: 10px 20px 0 0 ;
   cursor: pointer;
+  padding: 15px 40px;
 }
 
 .splashContent button:hover {
   background-color: blue;
-  border: none;
-  margin: 10px;
-  padding: 15px 40px;
 }
 

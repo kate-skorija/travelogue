@@ -11,7 +11,7 @@ import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import firebase from "firebase/app";
-import { Feature, Overlay } from "ol";
+import { Feature } from "ol";
 import { Point } from 'ol/geom'
 import { withFirestore } from 'react-redux-firebase';
 import Select from 'ol/interaction/Select';
@@ -19,6 +19,9 @@ import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 import 'ol/ol.css'
 import TileJSON from 'ol/source/TileJSON';
 import { Modal } from 'react-bootstrap';
+import NewPlaceForm from './NewPlaceForm';
+import { v4 } from 'uuid';
+
 
 class MapControl extends React.Component {
 
@@ -112,9 +115,11 @@ class MapControl extends React.Component {
       const newPoint = new Feature({
         geometry: new Point(rawCoord),
         userId: user.uid,
+        featureId: {v4},
         name: null,
         country: null,
-        notes: null
+        notes: null,
+        
       })
   
       this.setState({
@@ -162,17 +167,29 @@ class MapControl extends React.Component {
     this.state.map.addLayer(pointsVectorLayer);
   }
 
+  handleNewPlace = (newPlace) => {
+    const newFeaturesList = this.state.features
+      .filter(place => place.featureId !== this.state.selectedFeature.get('featureId'))
+      .concat(newPlace);
+    this.setState({
+      features: newFeaturesList,
+      selectedFeature: null
+    })
+  }
+
 
   hideModal = () => {
     this.setState({ modalVisible: false })
   }
 
 
+
   
   render() {
     let featureModal = null;
-    if (this.state.modalVisible) {
-      console.log(this.state.selectedFeature)
+    if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
+      console.log(this.state.selectedFeature);
+      console.log(featureModal);
       featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>
         <Modal.Header closeButton>
           <Modal.Title>Place Name</Modal.Title>
@@ -183,6 +200,10 @@ class MapControl extends React.Component {
           <button className="btn btn-warning" onClick={this.hideModal}>Save Changes</button>
         </Modal.Footer>
       </Modal>
+    } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
+      console.log(this.state.modalVisible);
+      featureModal = <NewPlaceForm place={this.state.selectedFeature} onShow={this.state.modalVisiable} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} />
+      console.log(featureModal);
     }
     return (
       <React.Fragment>

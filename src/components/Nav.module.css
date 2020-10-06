@@ -1,6 +1,6 @@
 .navBar {
   display: grid;
-  grid-template-columns: 80% 1fr 1fr;
+  grid-template-columns: 90% 108px;
   grid-template-rows: 12vh;
   align-items: center;
   padding: 0 55px;
@@ -12,19 +12,17 @@
   color: white;
   text-shadow: -4px 4px 0px #04047c,
   -6px 6px 0px blue;
-  /* -9px 9px 0px #00bdbd; */ 
   margin-left: 10px;
   font-size: 37px;
 }
 
 .navButton {
   background-color: #ffcc33;
-  padding: 12px 28px;
+  padding: 12px 0;
   font-size: 16px;
   cursor: pointer;
   border: none;
   text-decoration: none;
-  margin: 0 7px;
 }
 
 .navButton a{

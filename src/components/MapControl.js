@@ -19,7 +19,7 @@ import { withFirestore } from 'react-redux-firebase';
 // import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 import 'ol/ol.css'
 import { Modal } from 'react-bootstrap';
-// import NewPlaceForm from './NewPlaceForm';
+import NewPlaceForm from './NewPlaceForm';
 import 'firebase/auth';
 
 class MapControl extends React.Component {
@@ -29,7 +29,6 @@ class MapControl extends React.Component {
     this.state = {
       map: null,
       features: [],
-      // featuresLayer: null,
       modalVisible: false,
       selectedFeature: null
     };
@@ -91,8 +90,7 @@ class MapControl extends React.Component {
     });
 
     this.setState({
-      map: map,
-
+      map: map
     });
     
     map.on('click', this.handleMapClick.bind(this));
@@ -150,7 +148,7 @@ class MapControl extends React.Component {
         this.setState({
           features: [...this.state.features, newPlace],
         });
-    });
+      });
     }
   }
 
@@ -171,43 +169,6 @@ class MapControl extends React.Component {
         }),
       }),
     });
-    // let pointStyle = null;
-    // this.state.features.forEach((feature) => {
-    //   console.log(feature);
-    //   if (feature.get('name')) {
-    //     pointStyle = new Style({
-    //       fill: new Fill({
-    //         color: 'rgba(255, 255, 255, 0.2)',
-    //       }),
-    //       stroke: new Stroke({
-    //         color: 'blue',
-    //         width: 2,
-    //       }),
-    //       image: new CircleStyle({
-    //         radius: 7,
-    //         fill: new Fill({
-    //           color: 'blue',
-    //         }),
-    //       }),
-    //     });
-    //   } else {
-    //     pointStyle = new Style({
-    //       fill: new Fill({
-    //         color: 'rgba(255, 255, 255, 0.2)',
-    //       }),
-    //       stroke: new Stroke({
-    //         color: 'blue',
-    //         width: 2,
-    //       }),
-    //       image: new CircleStyle({
-    //         radius: 7,
-    //         fill: new Fill({
-    //           color: '#ffcc33',
-    //         }),
-    //       }),
-    //     });
-    //   }
-    // });
 
     const vectorSource = new VectorSource({
       features: this.state.features
@@ -241,11 +202,8 @@ class MapControl extends React.Component {
 
     this.setState({
       features: newFeaturesList,
-      selectedFeature: null,
-      modalVisible: false
+      selectedFeature: newPlaceFeature,
     });
-
-    window.location.reload(false);
   }
 
   //Adds form values to Firestore
@@ -257,13 +215,13 @@ class MapControl extends React.Component {
       notes: event.target.notes.value, 
     }
 
-    this.props.firestore
-      .update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd);
+    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd);
     this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: this.state.selectedFeature.get('longitude'), latitude: this.state.selectedFeature.get('latitude'), userId: this.state.selectedFeature.get('userId'), featureId: this.state.selectedFeature.get('featureId') });
   }
 
   hideModal = () => {
-    this.setState({ modalVisible: false })
+    this.setState({ modalVisible: false });
+    window.location.reload(false);
   }
 
   render() {
@@ -283,7 +241,7 @@ class MapControl extends React.Component {
       </Modal>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
       featureModal = 
-      // featureModal = <NewPlaceForm onShow={this.state.modalVisiable} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} id={this.state.selectedFeature.get('featureId')} />
+      // featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} id={this.state.selectedFeature.get('featureId')} />
       <Modal show={this.state.modalVisible} onHide={this.hideModal} >
       <Modal.Header closeButton>
         <Modal.Title>Add a New Place</Modal.Title>

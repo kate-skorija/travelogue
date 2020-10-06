@@ -12,18 +12,15 @@ import Stamen from 'ol/source/Stamen';
 import styles from './MapControl.module.css';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import firebase from "firebase/app";
-// import firebase from 'firebase';
 import { Feature } from "ol";
 import { Point } from 'ol/geom'
 import { withFirestore } from 'react-redux-firebase';
-import Select from 'ol/interaction/Select';
-import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
+// import Select from 'ol/interaction/Select';
+// import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 import 'ol/ol.css'
-import TileJSON from 'ol/source/TileJSON';
 import { Modal } from 'react-bootstrap';
-import NewPlaceForm from './NewPlaceForm';
+// import NewPlaceForm from './NewPlaceForm';
 import { v4 } from 'uuid';
-import 'firebase/auth';
 
 class MapControl extends React.Component {
 
@@ -33,43 +30,40 @@ class MapControl extends React.Component {
       map: null,
       features: [],
       modalVisible: false,
-      selectedFeature: null,
-      user: null
+      selectedFeature: null
     };
   }
   
   componentDidMount() {
 
-    
-
     // Get user's previously added points from firestore and add them to features array
     const user = firebase.auth().currentUser;
     
-    const previousPoints = this.props.firestore.collection('places').where('userId', '==', user.uid).get()
+    const previousPlaces = this.props.firestore.collection('places').where('userId', '==', user.uid).get()
       .then((querySnapshot) => {                                    
       const result = querySnapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id }
       })
 
-      result.forEach((point) => {
-        const oldPoint = new Feature ({
-          geometry: new Point([point.long, point.lat]),
-          userId: point.userId,
-          name: point.name,
-          country: point.country,
-          notes: point.notes,
-          coordinates: point.coordinates,
-          featureId: point.featureId
+      result.forEach((place) => {
+        const oldPlace = new Feature ({
+          geometry: new Point(place.coordinates),
+          userId: place.userId,
+          name: place.name,
+          country: place.country,
+          notes: place.notes,
+          coordinates: place.coordinates,
+          featureId: place.id
         });
 
         this.setState({
-          features: [...this.state.features, oldPoint]
+          features: [...this.state.features, oldPlace]
         });
+        console.log(this.state.features);
       });
     });
 
     // Create intial Map
-
     const map = new Map({
       target: 'map',
       controls: [
@@ -122,35 +116,35 @@ class MapControl extends React.Component {
     );
 
     if (!featuresAtClick || featuresAtClick.length === 0 ){
-      const newPoint = new Feature({
-        geometry: new Point(rawCoord),
-        coordinates: rawCoord,
-        userId: user.uid,
-        featureId: {v4},
-        name: null,
-        country: null,
-        notes: null,
-      })
-  
-      this.setState({
-        features: [...this.state.features, newPoint],
-      })
   
       this.props.firestore.collection('places').add(
         {
-          lat: rawCoord[1],
-          long: rawCoord[0],
+          coordinates: [rawCoord[1], rawCoord[0]],
           latitude: transformedCoord[1],
           longitude: transformedCoord[0],
           userId: user.uid,
-          // featureId: newPoint.featureId,
-          // name: null,
-          // country: null,
-          // notes: null,
+          name: null,
+          country: null,
+          notes: null,
         }
-      );
+      ).then((docRef) => {
+        const newPlace = new Feature({
+          geometry: new Point(rawCoord),
+          coordinates: rawCoord,
+          userId: user.uid,
+          featureId: docRef.id,
+          name: null,
+          country: null,
+          notes: null
+        });
+
+        this.setState({
+          features: [...this.state.features, newPlace],
+        });
+    });
     }
   }
+
 
   displayPoints() {
     const pointStyle = new Style({
@@ -188,7 +182,7 @@ class MapControl extends React.Component {
       geometry: new Point(newPlace.coordinates),
       coordinates: newPlace.coordinates,
       userId: newPlace.userId,
-      featureId: newPlace.featureId,
+      featureId: newPlace.id,
       name: newPlace.name,
       country: newPlace.country,
       notes: newPlace.notes,
@@ -211,14 +205,11 @@ class MapControl extends React.Component {
       name: event.target.name.value, 
       country: event.target.country.value, 
       notes: event.target.notes.value, 
-      coordinates: this.state.selectedFeature.get('coordinates'), 
-      featureId: this.state.selectedFeature.get('featureId'), 
-      // userId: this.state.selectedFeature.get('userId')
     }
 
-    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd)
+    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.featureId}, propertiesToAdd)
 
-    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, coordinates: this.state.selectedFeature.get('coordinates'), featureId: this.state.selectedFeature.get('featureId'), userId: this.state.selectedFeature.get('userId') })
+    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value })
 
   }
 
@@ -243,7 +234,7 @@ class MapControl extends React.Component {
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
       featureModal = 
       // featureModal = <NewPlaceForm onShow={this.state.modalVisiable} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} id={this.state.selectedFeature.get('featureId')} />
-      <Modal show={this.state.modalVisible} onHide={this.hideModal}>
+      <Modal show={this.state.modalVisible} onHide={this.hideModal} >
       <Modal.Header closeButton>
         <Modal.Title>Add a New Place</Modal.Title>
       </Modal.Header>

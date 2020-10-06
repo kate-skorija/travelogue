@@ -29,7 +29,7 @@ class MapControl extends React.Component {
     this.state = {
       map: null,
       features: [],
-      featuresLayer: null,
+      // featuresLayer: null,
       modalVisible: false,
       selectedFeature: null
     };
@@ -62,8 +62,17 @@ class MapControl extends React.Component {
         this.setState({
           features: [...this.state.features, oldPlace]
         });
+
+        this.displayPoints(oldPlace);
       });
+      
     });
+
+    // const featuresLayer = new VectorLayer ({
+    //   source: new VectorSource ({
+    //     features: this.state.features
+    //   })
+    // })
 
     // Create intial Map
     const map = new Map({
@@ -78,7 +87,8 @@ class MapControl extends React.Component {
           source: new Stamen({
             layer: 'toner',
           }),
-        })
+        }),
+        // featuresLayer
       ],
       view: new View({
         center: fromLonLat([11, 20]),
@@ -88,15 +98,16 @@ class MapControl extends React.Component {
 
     this.setState({
       map: map,
+      // featuresLayer: featuresLayer
     });
     
     map.on('click', this.handleMapClick.bind(this));
 
   }
 
-  componentDidUpdate() {
-    this.displayPoints();
-  }
+  // componentDidUpdate() {
+  //   this.displayPoints();
+  // }
 
   handleMapClick(event) {
     const rawCoord = event.coordinate;
@@ -145,12 +156,14 @@ class MapControl extends React.Component {
         this.setState({
           features: [...this.state.features, newPlace],
         });
+
+        this.displayPoints(newPlace);
     });
     }
   }
 
 
-  displayPoints() {
+  displayPoints(featureToAdd) {
     
     let pointStyle = null;
     this.state.features.forEach((feature) => {
@@ -193,15 +206,24 @@ class MapControl extends React.Component {
     console.log(this.state.features);
 
     const vectorSource = new VectorSource({
-      features: this.state.features
+      features: [...this.state.features, featureToAdd]
     });
+
+    // vectorSource.addFeature(featureToAdd);
 
     const pointsVectorLayer = new VectorLayer({
       source: vectorSource,
       style: pointStyle
     });
 
+    // const updatedFeaturesLayer = new VectorLayer({
+    //   style: pointStyle,
+    //   source: vectorSource
+    // })
+
+    
     this.state.map.addLayer(pointsVectorLayer);
+    
   }
 
   handleNewPlace = (newPlace) => {
@@ -227,6 +249,8 @@ class MapControl extends React.Component {
       selectedFeature: null,
       modalVisible: false
     });
+
+    this.displayPoints(newPlaceFeature);
   }
 
   //Adds form values to Firestore

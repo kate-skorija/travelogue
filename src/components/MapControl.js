@@ -65,12 +65,6 @@ class MapControl extends React.Component {
       });
     });
 
-    const featuresLayer = new VectorLayer ({
-      source: new VectorSource ({
-        features: this.state.features
-      })
-    });
-
     // Create intial Map
     const map = new Map({
       target: 'map',
@@ -124,7 +118,7 @@ class MapControl extends React.Component {
       {hitTolerance: 4}
     );
 
-    //Create new point for new place if no features are present where clicked
+    //Create new place in firestore and features array if no features are present where clicked
     if (!featuresAtClick || featuresAtClick.length === 0 ){
   
       this.props.firestore.collection('places').add(
@@ -157,7 +151,7 @@ class MapControl extends React.Component {
 
 
   displayPoints() {
-    console.log(this.state.features);
+    
     let pointStyle = null;
     this.state.features.forEach((feature) => {
       console.log(feature);
@@ -244,7 +238,6 @@ class MapControl extends React.Component {
       notes: event.target.notes.value, 
     }
 
-    console.log(this.state.selectedFeature);
     this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd)
 
     this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: this.state.selectedFeature.get('longitude'), latitude: this.state.selectedFeature.get('latitude'), userId: this.state.selectedFeature.get('userId'), featureId: this.state.selectedFeature.get('featureId') })
@@ -258,15 +251,16 @@ class MapControl extends React.Component {
   render() {
     let featureModal = null;
     if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
-      console.log("Place Details");
       featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Place Name</Modal.Title>
+          <Modal.Title>{this.state.selectedFeature.get('name')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo! Modal showing!{this.state.selectedFeature.get('userId')}</Modal.Body>
+        <Modal.Body>
+          <p>Country: {this.state.selectedFeature.get('country')}</p>
+          <p>Notes: {this.state.selectedFeature.get('notes')}</p>
+        </Modal.Body>
         <Modal.Footer>
-          <button className="btn btn-warning" onClick={this.hideModal}>Close</button>
-          <button className="btn btn-warning" onClick={this.hideModal}>Save Changes</button>
+          <button className={styles.modalButton} onClick={this.hideModal}>Close</button>
         </Modal.Footer>
       </Modal>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
@@ -278,18 +272,19 @@ class MapControl extends React.Component {
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={this.handleNewPlaceFormSubmission}>
-          <input
+          <input className="form-control"
             type='text'
             name='name'
             placeholder='Name of Place' 
             required />
-          <input
+          <input className="form-control"
             type='text'
             name='country'
             placeholder='Country' />
-          <textarea
-            name='notes'/>
-          <button type='submit'>Save</button>
+          <textarea className="form-control"
+            name='notes'
+            placeholder='Notes' />
+          <button className={styles.modalButton} type='submit'>Save</button>
         </form>
       </Modal.Body>
     </Modal>

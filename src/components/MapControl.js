@@ -44,10 +44,11 @@ class MapControl extends React.Component {
       const result = querySnapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id }
       })
-
+      console.log(result);
       result.forEach((place) => {
+        console.log(place.coordinates);
         const oldPlace = new Feature ({
-          geometry: new Point(place.coordinates),
+          geometry: new Point([place.long, place.lat]),
           userId: place.userId,
           name: place.name,
           country: place.country,
@@ -60,6 +61,7 @@ class MapControl extends React.Component {
           features: [...this.state.features, oldPlace]
         });
         console.log(this.state.features);
+        this.displayPoints();
       });
     });
 
@@ -119,6 +121,8 @@ class MapControl extends React.Component {
   
       this.props.firestore.collection('places').add(
         {
+          lat: rawCoord[1],
+          long: rawCoord[0],
           coordinates: [rawCoord[1], rawCoord[0]],
           latitude: transformedCoord[1],
           longitude: transformedCoord[0],
@@ -219,6 +223,7 @@ class MapControl extends React.Component {
 
   render() {
     let featureModal = null;
+    console.log(this.state.selectedFeature);
     if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
       console.log("Place Details");
       featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>

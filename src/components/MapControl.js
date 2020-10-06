@@ -44,24 +44,23 @@ class MapControl extends React.Component {
       const result = querySnapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id }
       })
-      console.log(result);
+
       result.forEach((place) => {
-        console.log(place.coordinates);
+        
         const oldPlace = new Feature ({
-          geometry: new Point([place.long, place.lat]),
+          geometry: new Point([place.longitude, place.latitude]),
           userId: place.userId,
           name: place.name,
           country: place.country,
           notes: place.notes,
-          coordinates: place.coordinates,
+          longitude: place.longitude,
+          latitude: place.latitude,
           featureId: place.id
         });
 
         this.setState({
           features: [...this.state.features, oldPlace]
         });
-        console.log(this.state.features);
-        this.displayPoints();
       });
     });
 
@@ -103,6 +102,7 @@ class MapControl extends React.Component {
     const transformedCoord = transform(rawCoord, 'EPSG:3857', 'EPSG:4326');
     const user = firebase.auth().currentUser;
 
+    //Check to see if features are already present where clicked, if so display form/details
     let featuresAtClick = []
     this.state.map.forEachFeatureAtPixel(event.pixel, 
       (feature, layer) => {
@@ -117,15 +117,13 @@ class MapControl extends React.Component {
       {hitTolerance: 4}
     );
 
+    //Create new point for new place if no features are present where clicked
     if (!featuresAtClick || featuresAtClick.length === 0 ){
   
       this.props.firestore.collection('places').add(
         {
-          lat: rawCoord[1],
-          long: rawCoord[0],
-          coordinates: [rawCoord[1], rawCoord[0]],
-          latitude: transformedCoord[1],
-          longitude: transformedCoord[0],
+          latitude: rawCoord[1],
+          longitude: rawCoord[0],
           userId: user.uid,
           name: null,
           country: null,
@@ -133,8 +131,9 @@ class MapControl extends React.Component {
         }
       ).then((docRef) => {
         const newPlace = new Feature({
-          geometry: new Point(rawCoord),
-          coordinates: rawCoord,
+          geometry: new Point([rawCoord[0], rawCoord[1]]),
+          latitude: rawCoord[1],
+          longitude: rawCoord[0],
           userId: user.uid,
           featureId: docRef.id,
           name: null,
@@ -151,22 +150,46 @@ class MapControl extends React.Component {
 
 
   displayPoints() {
-    const pointStyle = new Style({
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)',
-      }),
-      stroke: new Stroke({
-        color: 'blue',
-        width: 2,
-      }),
-      image: new CircleStyle({
-        radius: 7,
-        fill: new Fill({
-          color: '#ffcc33',
-        }),
-      }),
+    console.log(this.state.features);
+    let pointStyle = null;
+    this.state.features.forEach((feature) => {
+      console.log(feature);
+      if (feature.get('name')) {
+        pointStyle = new Style({
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+          stroke: new Stroke({
+            color: 'blue',
+            width: 2,
+          }),
+          image: new CircleStyle({
+            radius: 7,
+            fill: new Fill({
+              color: '#ffcc33',
+            }),
+          }),
+        });
+      } else {
+        pointStyle = new Style({
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+          stroke: new Stroke({
+            color: 'blue',
+            width: 2,
+          }),
+          image: new CircleStyle({
+            radius: 7,
+            fill: new Fill({
+              color: 'blue',
+            }),
+          }),
+        });
+      }
     });
-
+    
+    console.log(this.state.features);
     const vectorSource = new VectorSource({
       features: this.state.features
     });
@@ -180,13 +203,14 @@ class MapControl extends React.Component {
   }
 
   handleNewPlace = (newPlace) => {
-    console.log(newPlace);
 
+    console.log(newPlace);
     const newPlaceFeature = new Feature({
-      geometry: new Point(newPlace.coordinates),
-      coordinates: newPlace.coordinates,
+      geometry: new Point(newPlace.longitude, newPlace.latitude),
+      longitude: newPlace.longitude,
+      latitude: newPlace.latitude,
       userId: newPlace.userId,
-      featureId: newPlace.id,
+      featureId: newPlace.featureId,
       name: newPlace.name,
       country: newPlace.country,
       notes: newPlace.notes,
@@ -195,6 +219,7 @@ class MapControl extends React.Component {
       .filter(place => place.get('featureId')!== newPlace.featureId)
       .concat(newPlaceFeature);
       console.log(newFeaturesList);
+
     this.setState({
       features: newFeaturesList,
       selectedFeature: null,
@@ -202,6 +227,7 @@ class MapControl extends React.Component {
     })
   }
 
+  //Adds form values to Firestore
   handleNewPlaceFormSubmission = (event) => {
     event.preventDefault();
     const propertiesToAdd = {
@@ -210,10 +236,10 @@ class MapControl extends React.Component {
       notes: event.target.notes.value, 
     }
 
-    console.log(this.state.selectedFeature)
+    console.log(this.state.selectedFeature);
     this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd)
 
-    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, coordinates: this.state.selectedFeature.get('coordinates'), userId:this.state.selectedFeature.get('userId'), featureId: this.state.selectedFeature.get('featureId') })
+    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: this.state.selectedFeature.get('longitude'), latitude: this.state.selectedFeature.get('latitude'), userId: this.state.selectedFeature.get('userId'), featureId: this.state.selectedFeature.get('featureId') })
 
   }
 
@@ -223,7 +249,6 @@ class MapControl extends React.Component {
 
   render() {
     let featureModal = null;
-    console.log(this.state.selectedFeature);
     if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
       console.log("Place Details");
       featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>

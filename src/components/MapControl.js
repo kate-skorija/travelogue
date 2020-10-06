@@ -54,7 +54,12 @@ class MapControl extends React.Component {
       result.forEach((point) => {
         const oldPoint = new Feature ({
           geometry: new Point([point.long, point.lat]),
-          userId: point.userId
+          userId: point.userId,
+          name: point.name,
+          country: point.country,
+          notes: point.notes,
+          coordinates: point.coordinates,
+          featureId: point.featureId
         });
 
         this.setState({
@@ -119,12 +124,12 @@ class MapControl extends React.Component {
     if (!featuresAtClick || featuresAtClick.length === 0 ){
       const newPoint = new Feature({
         geometry: new Point(rawCoord),
+        coordinates: rawCoord,
         userId: user.uid,
         featureId: {v4},
         name: null,
         country: null,
         notes: null,
-        
       })
   
       this.setState({
@@ -137,7 +142,11 @@ class MapControl extends React.Component {
           long: rawCoord[0],
           latitude: transformedCoord[1],
           longitude: transformedCoord[0],
-          userId: user.uid
+          userId: user.uid,
+          // featureId: newPoint.featureId,
+          // name: null,
+          // country: null,
+          // notes: null,
         }
       );
     }
@@ -173,18 +182,44 @@ class MapControl extends React.Component {
   }
 
   handleNewPlace = (newPlace) => {
+    console.log(newPlace);
+
+    const newPlaceFeature = new Feature({
+      geometry: new Point(newPlace.coordinates),
+      coordinates: newPlace.coordinates,
+      userId: newPlace.userId,
+      featureId: newPlace.featureId,
+      name: newPlace.name,
+      country: newPlace.country,
+      notes: newPlace.notes,
+    })
     const newFeaturesList = this.state.features
-      .filter(place => place.featureId !== this.state.selectedFeature.get('featureId'))
-      .concat(newPlace);
+      .filter(place => place.get('featureId')!== newPlace.featureId)
+      .concat(newPlaceFeature);
+      console.log(newFeaturesList);
     this.setState({
       features: newFeaturesList,
-      selectedFeature: null
+      selectedFeature: null,
+      modalVisible: false
     })
+    console.log(this.state.features);
   }
 
   handleNewPlaceFormSubmission = (event) => {
-    event.preventDeafult();
-    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, featureId: this.state.selectedFeature.get('featureId'), userId: this.state.selectedFeature.get('userId') })
+    event.preventDefault();
+    const propertiesToAdd = {
+      name: event.target.name.value, 
+      country: event.target.country.value, 
+      notes: event.target.notes.value, 
+      coordinates: this.state.selectedFeature.get('coordinates'), 
+      featureId: this.state.selectedFeature.get('featureId'), 
+      // userId: this.state.selectedFeature.get('userId')
+    }
+
+    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd)
+
+    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, coordinates: this.state.selectedFeature.get('coordinates'), featureId: this.state.selectedFeature.get('featureId'), userId: this.state.selectedFeature.get('userId') })
+
   }
 
   hideModal = () => {
@@ -213,7 +248,7 @@ class MapControl extends React.Component {
         <Modal.Title>Add a New Place</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={this.handleNewPlaceSubmission}>
+        <form onSubmit={this.handleNewPlaceFormSubmission}>
           <input
             type='text'
             name='name'

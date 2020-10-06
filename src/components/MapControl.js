@@ -196,7 +196,6 @@ class MapControl extends React.Component {
       selectedFeature: null,
       modalVisible: false
     })
-    console.log(this.state.features);
   }
 
   handleNewPlaceFormSubmission = (event) => {
@@ -207,9 +206,10 @@ class MapControl extends React.Component {
       notes: event.target.notes.value, 
     }
 
-    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.featureId}, propertiesToAdd)
+    console.log(this.state.selectedFeature)
+    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd)
 
-    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value })
+    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, coordinates: this.state.selectedFeature.get('coordinates'), userId:this.state.selectedFeature.get('userId'), featureId: this.state.selectedFeature.get('featureId') })
 
   }
 

@@ -29,6 +29,7 @@ class MapControl extends React.Component {
     this.state = {
       map: null,
       features: [],
+      featuresLayer: null,
       modalVisible: false,
       selectedFeature: null
     };
@@ -64,6 +65,12 @@ class MapControl extends React.Component {
       });
     });
 
+    const featuresLayer = new VectorLayer ({
+      source: new VectorSource ({
+        features: this.state.features
+      })
+    });
+
     // Create intial Map
     const map = new Map({
       target: 'map',
@@ -77,7 +84,7 @@ class MapControl extends React.Component {
           source: new Stamen({
             layer: 'toner',
           }),
-        }),
+        })
       ],
       view: new View({
         center: fromLonLat([11, 20]),
@@ -190,6 +197,7 @@ class MapControl extends React.Component {
     });
     
     console.log(this.state.features);
+
     const vectorSource = new VectorSource({
       features: this.state.features
     });
@@ -224,7 +232,7 @@ class MapControl extends React.Component {
       features: newFeaturesList,
       selectedFeature: null,
       modalVisible: false
-    })
+    });
   }
 
   //Adds form values to Firestore

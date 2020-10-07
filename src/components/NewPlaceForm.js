@@ -24,7 +24,7 @@ function NewPlaceForm(props){
 
   return (
     <React.Fragment>
-      <Modal show={props.onShow} onHide={props.onHide}>
+      <Modal show={props.onShow} onHide={props.onHide} centered>
         <Modal.Header closeButton>
           <Modal.Title>Add a New Place</Modal.Title>
         </Modal.Header>

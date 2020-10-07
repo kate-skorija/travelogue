@@ -58,7 +58,7 @@ To Clone:
   ```
   These are the values you will need to place in your .env file, but first you will need to create the database. Click on the "Database" tab in the "Develop" pane on the left side of Firebase console and then click "Create database". Make sure you're choosing Firestore as your database option.
 
-6. In your .evn file, copy and paste your keys from firebase into environment variables like so:
+6. In your .env file, copy and paste your keys from firebase into environment variables like so:
   ```
   REACT_APP_FIREBASE_API_KEY = "YOUR-UNIQUE-CREDENTIALS"
   REACT_APP_FIREBASE_AUTH_DOMAIN = "YOUR-PROJECT-NAME.firebaseapp.com"
@@ -71,10 +71,22 @@ To Clone:
 
 7. Now you're ready to install. Type `$ npm install` in your terminal to install all webpack plugins and dependencies. Once finished, type `$npm run build`, then`$ npm start` to interact with the project in the browser.
 
+## Minimum Viable Product Goals:
+
+*  Users can navigate a world map easily (zoom, pan, etc).
+*  Users can place pins on the map with a click, to mark places they’ve been and add places they would like to go.
+*  Users can create a login and view their previously placed pins once logged in.
+*  Users can click on a placed pin and create/read/update/delete notes for that place.
+
+## Stretch Goals:
+
+*  User's pin color will change based on if it is a place they've been, or a place they want to go.
+*  Users can upload local photos to the places they have been, so they can look back on travel memories.
+*  Users can access a user dashboard where they can browse their places in list form, and search through their places and notes.
 
 ## Known Bugs
 
-In order for the pins to display correctly, the page currently has to refresh on the closing of the place modal. 
+In order for the pins to display correctly after they've been modified, the page currently has to refresh on the closing of the place modal. I hope to remedy this by adjusting how I'm adding layers to the map.
 <br>
 
 ## Support and Contact Details
@@ -101,9 +113,3 @@ If there are any issues or questions, please reach out to me through [my GitHub 
 *This project uses the following license: [MIT](https://opensource.org/licenses/MIT)*
 
 Copyright (c) 2020 **_Kate Skorija_** 
-
-
-
-<!-- Where You Left Off:  -->
-<!-- You were trying to create a new point on a map click; may need a separate createPoint.js? and to add state to explore and pass down methods -->
-<!-- Check out the regular Draw example for Open Layers, compare to other examples -->

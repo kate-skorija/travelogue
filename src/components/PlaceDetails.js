@@ -15,7 +15,7 @@ function PlaceDetails(props) {
 
   return(
     <React.Fragment>
-      <Modal show={props.onShow} onHide={props.onHide}>
+      <Modal show={props.onShow} onHide={props.onHide} centered>
         <Modal.Header closeButton>
           <Modal.Title>{props.place.get('name')}</Modal.Title>
         </Modal.Header>

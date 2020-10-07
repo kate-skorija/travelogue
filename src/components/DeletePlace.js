@@ -7,7 +7,7 @@ function DeletePlace(props) {
   
   return(
     <React.Fragment>
-      <Modal show={props.onShow} onHide={props.onHide}>
+      <Modal show={props.onShow} onHide={props.onHide} centered>
         <Modal.Header closeButton>
           <Modal.Title>Delete Place</Modal.Title>
         </Modal.Header>

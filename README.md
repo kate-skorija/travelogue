@@ -24,14 +24,13 @@ Users can explore a world map and place pins on locations, updating the pins wit
 *  Users can navigate a world map easily (zoom, pan, etc).
 *  Users can to place pins on map to mark places they’ve been and places they would like to go.
 *  Users can login to view previously saved pins.
-*  Users can click on a placed pin and add/update/review notes they’ve made about that place.
+*  Users can click on a placed pin and add/update/review notes they’ve made about that place, or delete that place.
 
 <br>
 
 ## Known Bugs
 
-Currently a user can login, explore a world map, and place pins that are saved to their account. I am working on adding functionality for adding notes when pins are clicked on.
- 
+In order for the pins to display correctly, the page currently has to refresh on the closing of the place modal. 
 <br>
 
 ## Support and Contact Details
@@ -47,8 +46,8 @@ If there are any issues or questions, please reach out to me through [my GitHub 
 *  JSX
 *  React
 *  Redux
-*  OpenLayers (map)
-*  Stamen (map tiles)
+*  OpenLayers 
+*  Stamen 
 *  Webpack
 *  npm
 <br><br>

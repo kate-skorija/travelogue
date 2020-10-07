@@ -5,6 +5,14 @@ import styles from './PlaceModal.module.css';
 
 function PlaceDetails(props){
 
+  function handlePlaceType(type) {
+    if (type === "haveBeen") {
+      return "Have Been";
+    } else {
+      return "To Go";
+    }
+  }
+
   return(
     <React.Fragment>
       <Modal show={props.onShow} onHide={props.onHide}>
@@ -12,6 +20,7 @@ function PlaceDetails(props){
           <Modal.Title>{props.place.get('name')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p>Type of Place: {handlePlaceType(props.place.get('type'))}</p>
           <p>Country: {props.place.get('country')}</p>
           <p>Notes: {props.place.get('notes')}</p>
         </Modal.Body>

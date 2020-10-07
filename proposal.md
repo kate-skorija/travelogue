@@ -29,6 +29,4 @@ Travelogue will be a visual resource for users to keep track of places they’ve
 *  Firestore
 *  webpack
 *  npm
-*  Jest
 *  CSS
-*  Styled Components

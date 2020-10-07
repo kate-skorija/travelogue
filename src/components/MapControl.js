@@ -53,6 +53,7 @@ class MapControl extends React.Component {
               geometry: new Point([place.longitude, place.latitude]),
               userId: place.userId,
               name: place.name,
+              type: place.type,
               country: place.country,
               notes: place.notes,
               longitude: place.longitude,
@@ -133,6 +134,7 @@ class MapControl extends React.Component {
           longitude: rawCoord[0],
           userId: user.uid,
           name: null,
+          type: null,
           country: null,
           notes: null,
         }
@@ -144,6 +146,7 @@ class MapControl extends React.Component {
           userId: user.uid,
           featureId: docRef.id,
           name: null,
+          type: null,
           country: null,
           notes: null
         });
@@ -185,6 +188,7 @@ class MapControl extends React.Component {
   }
 
   handleNewPlace = (newPlace) => {
+    console.log(newPlace);
     const newPlaceFeature = new Feature({
       geometry: new Point(newPlace.longitude, newPlace.latitude),
       longitude: newPlace.longitude,
@@ -192,6 +196,7 @@ class MapControl extends React.Component {
       userId: newPlace.userId,
       featureId: newPlace.featureId,
       name: newPlace.name,
+      type: newPlace.type,
       country: newPlace.country,
       notes: newPlace.notes,
     });
@@ -215,7 +220,6 @@ class MapControl extends React.Component {
   }
 
   handleDeletePlace = (id) => {
-    console.log(id);
     this.props.firestore.delete({collection: 'places', doc: id});
     const updatedFeatures = this.state.features.filter(place => place.get('featureId') !== id);
     this.setState({

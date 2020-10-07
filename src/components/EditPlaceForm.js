@@ -17,7 +17,7 @@ function EditPlaceForm(props){
     }
 
     firestore.update({collection: 'places', doc: props.place.get('featureId')}, propertiesToAdd);
-    props.onEditPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
+    props.onEditPlace({name: event.target.name.value, type: event.target.type.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
     
   }
 
@@ -29,11 +29,16 @@ function EditPlaceForm(props){
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleEditPlaceSubmission}>
+          <select id="type" name="type" className="form-control">
+              <option value="toGo">To Go</option>
+              <option value="haveBeen">Have Been</option>
+            </select>
             <input className="form-control"
               type='text'
               name='name'
               placeholder={props.place.get('name')} 
               required />
+            <label for="type">Type of Place:</label>
             <input className="form-control"
               type='text'
               name='country'

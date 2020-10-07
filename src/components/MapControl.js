@@ -1,26 +1,26 @@
 import React from "react";
+import firebase from "firebase/app";
 import Nav from './Nav';
+import NewPlaceForm from './NewPlaceForm';
+import EditPlaceForm from './EditPlaceForm';
+import PlaceDetails from './PlaceDetails';
+import DeletePlace from './DeletePlace';
+import styles from './MapControl.module.css';
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import {transform, fromLonLat} from 'ol/proj'
-import { Zoom } from 'ol/control';
 import Stamen from 'ol/source/Stamen';
-import styles from './MapControl.module.css';
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
-import firebase from "firebase/app";
+import { transform, fromLonLat } from 'ol/proj'
+import { Zoom } from 'ol/control';
+import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Feature } from "ol";
 import { Point } from 'ol/geom'
 import { withFirestore } from 'react-redux-firebase';
-import 'ol/ol.css'
-import NewPlaceForm from './NewPlaceForm';
-import EditPlaceForm from './EditPlaceForm';
-import PlaceDetails from './PlaceDetails';
-import DeletePlace from './DeletePlace';
 import { Redirect } from "react-router-dom";
 import 'firebase/auth';
+import 'ol/ol.css'
 
 class MapControl extends React.Component {
 
@@ -43,23 +43,21 @@ class MapControl extends React.Component {
         // Get user's previously added points from firestore and add them to features array
         const previousPlaces = this.props.firestore.collection('places').where('userId', '==', user.uid).get()
           .then((querySnapshot) => {                                    
-          const result = querySnapshot.docs.map((doc) => {
+            const result = querySnapshot.docs.map((doc) => {
             return { ...doc.data(), id: doc.id }
-          })
-
-          result.forEach((place) => {
-            
-            const oldPlace = new Feature ({
-              geometry: new Point([place.longitude, place.latitude]),
-              userId: place.userId,
-              name: place.name,
-              type: place.type,
-              country: place.country,
-              notes: place.notes,
-              longitude: place.longitude,
-              latitude: place.latitude,
-              featureId: place.id
-            });
+          });
+            result.forEach((place) => {
+              const oldPlace = new Feature ({
+                geometry: new Point([place.longitude, place.latitude]),
+                userId: place.userId,
+                name: place.name,
+                type: place.type,
+                country: place.country,
+                notes: place.notes,
+                longitude: place.longitude,
+                latitude: place.latitude,
+                featureId: place.id
+              });
 
             this.setState({
               features: [...this.state.features, oldPlace]
@@ -111,7 +109,7 @@ class MapControl extends React.Component {
     const user = firebase.auth().currentUser;
 
     //Check to see if features are already present where clicked, if so display form/details
-    let featuresAtClick = []
+    let featuresAtClick = [];
     this.state.map.forEachFeatureAtPixel(event.pixel, 
       (feature, layer) => {
         featuresAtClick.push(feature);
@@ -119,7 +117,7 @@ class MapControl extends React.Component {
           this.setState({
             modalVisible: true,
             selectedFeature: feature
-          })
+          });
         }
       },
       {hitTolerance: 4}
@@ -159,59 +157,22 @@ class MapControl extends React.Component {
   }
 
   displayPoints() {
-    let pointStyle = null;
-    this.state.features.forEach((feature) => {
-      console.log(this.state.features);
-      if (feature.get('type') === "toGo") {
-        pointStyle = new Style({
-          fill: new Fill({
-            color: 'rgba(255, 255, 255, 0.2)',
-          }),
-          stroke: new Stroke({
-            color: 'blue',
-            width: 2,
-          }),
-          image: new CircleStyle({
-            radius: 7,
-            fill: new Fill({
-              color: 'red',
-            }),
-          }),
-        });
-      } else {
-        pointStyle = new Style({
-          fill: new Fill({
-            color: 'rgba(255, 255, 255, 0.2)',
-          }),
-          stroke: new Stroke({
-            color: 'blue',
-            width: 2,
-          }),
-          image: new CircleStyle({
-            radius: 7,
-            fill: new Fill({
-              color: '#ffcc33',
-            }),
-          }),
-        });
-      }
+    //Create points on map for each feature
+    const pointStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.2)',
+      }),
+      stroke: new Stroke({
+        color: '#ffcc33',
+        width: 2,
+      }),
+      image: new CircleStyle({
+        radius: 7,
+        fill: new Fill({
+          color: '#ffcc33',
+        }),
+      }),
     });
-
-    // const pointStyle = new Style({
-    //   fill: new Fill({
-    //     color: 'rgba(255, 255, 255, 0.2)',
-    //   }),
-    //   stroke: new Stroke({
-    //     color: 'blue',
-    //     width: 2,
-    //   }),
-    //   image: new CircleStyle({
-    //     radius: 7,
-    //     fill: new Fill({
-    //       color: '#ffcc33',
-    //     }),
-    //   }),
-    // });
 
     const vectorSource = new VectorSource({
       features: this.state.features
@@ -298,7 +259,7 @@ class MapControl extends React.Component {
           {featureModal}
         </div>
       </React.Fragment>
-    )
+    );
   }
 }
 

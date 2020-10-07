@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
 import styles from './PlaceModal.module.css';
 
-function PlaceDetails(props){
+function PlaceDetails(props) {
 
   function handlePlaceType(type) {
     if (type === "haveBeen") {

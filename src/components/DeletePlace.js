@@ -4,6 +4,7 @@ import { Modal } from "react-bootstrap";
 import styles from './PlaceModal.module.css';
 
 function DeletePlace(props) {
+  
   return(
     <React.Fragment>
       <Modal show={props.onShow} onHide={props.onHide}>

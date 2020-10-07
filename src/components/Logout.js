@@ -5,14 +5,14 @@ import styles from './Logout.module.css';
 
 function Logout() {
 
-  const [loggedIn, setLoggedIn] = useState(true)
+  const [loggedIn, setLoggedIn] = useState(true);
 
   function doLogout() {
     firebase.auth().signOut().then(function() {
       console.log("Signed out!");
       setLoggedIn(false);
     }).catch(function(error) {
-      alert(error.message) ;
+      alert(error.message);
     });
   }
 

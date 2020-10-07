@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { useFirestore } from 'react-redux-firebase';
 import styles from './PlaceModal.module.css';
 
-function EditPlaceForm(props){
+function EditPlaceForm(props) {
 
   const firestore = useFirestore();
 
@@ -18,7 +18,6 @@ function EditPlaceForm(props){
 
     firestore.update({collection: 'places', doc: props.place.get('featureId')}, propertiesToAdd);
     props.onEditPlace({name: event.target.name.value, type: event.target.type.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
-    
   }
 
   return (

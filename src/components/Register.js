@@ -9,10 +9,10 @@ const Register = ({history}) => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
-    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
-      history.push('/explore')
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+      history.push('/explore');
     }).catch(function(error) {
-      alert(error.message) 
+      alert(error.message);
     });
   }
 

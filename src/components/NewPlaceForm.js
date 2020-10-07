@@ -1,12 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
+import { useFirestore } from 'react-redux-firebase';
 
 function NewPlaceForm(props){
 
+  const firestore = useFirestore();
+
   function handleNewPlaceSubmission(event) {
-    event.preventDeafult();
-    props.onPlaceCreation({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, featureId: props.id})
+    event.preventDefault();
+    const propertiesToAdd = {
+      name: event.target.name.value, 
+      country: event.target.country.value, 
+      notes: event.target.notes.value, 
+    }
+
+    firestore.update({collection: 'places', doc: props.place.get('featureId')}, propertiesToAdd);
+    props.onPlaceCreation({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
+    
   }
 
   return (

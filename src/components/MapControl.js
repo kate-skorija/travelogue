@@ -206,19 +206,6 @@ class MapControl extends React.Component {
     });
   }
 
-  //Adds form values to Firestore
-  handleNewPlaceFormSubmission = (event) => {
-    event.preventDefault();
-    const propertiesToAdd = {
-      name: event.target.name.value, 
-      country: event.target.country.value, 
-      notes: event.target.notes.value, 
-    }
-
-    this.props.firestore.update({collection: 'places', doc: this.state.selectedFeature.get('featureId')}, propertiesToAdd);
-    this.handleNewPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: this.state.selectedFeature.get('longitude'), latitude: this.state.selectedFeature.get('latitude'), userId: this.state.selectedFeature.get('userId'), featureId: this.state.selectedFeature.get('featureId') });
-  }
-
   hideModal = () => {
     this.setState({ modalVisible: false });
     window.location.reload(false);
@@ -240,30 +227,7 @@ class MapControl extends React.Component {
         </Modal.Footer>
       </Modal>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
-      featureModal = 
-      // featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} id={this.state.selectedFeature.get('featureId')} />
-      <Modal show={this.state.modalVisible} onHide={this.hideModal} >
-      <Modal.Header closeButton>
-        <Modal.Title>Add a New Place</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <form onSubmit={this.handleNewPlaceFormSubmission}>
-          <input className="form-control"
-            type='text'
-            name='name'
-            placeholder='Name of Place' 
-            required />
-          <input className="form-control"
-            type='text'
-            name='country'
-            placeholder='Country' />
-          <textarea className="form-control"
-            name='notes'
-            placeholder='Notes' />
-          <button className={styles.modalButton} type='submit'>Save</button>
-        </form>
-      </Modal.Body>
-    </Modal>
+      featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
     }
     return (
       <React.Fragment>

@@ -16,6 +16,7 @@ import { Point } from 'ol/geom'
 import { withFirestore } from 'react-redux-firebase';
 import 'ol/ol.css'
 import NewPlaceForm from './NewPlaceForm';
+import EditPlaceForm from './EditPlaceForm';
 import PlaceDetails from './PlaceDetails';
 import { Redirect } from "react-router-dom";
 import 'firebase/auth';
@@ -29,6 +30,7 @@ class MapControl extends React.Component {
       features: [],
       modalVisible: false,
       selectedFeature: null,
+      editing: false,
       redirect: null
     };
   }
@@ -201,6 +203,13 @@ class MapControl extends React.Component {
     this.setState({
       features: newFeaturesList,
       selectedFeature: newPlaceFeature,
+      editing: false
+    });
+  }
+
+  handleEditClick = () => {
+    this.setState({
+      editing: true
     });
   }
 
@@ -216,8 +225,10 @@ class MapControl extends React.Component {
     let featureModal = null;
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />
+    } else if (this.state.editing) {
+      featureModal = <EditPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditPlace={this.handleNewPlace}/>
     } else if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
-      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature}/>
+      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditClick={this.handleEditClick}/>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
       featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
     }

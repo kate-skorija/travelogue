@@ -4,11 +4,11 @@ import { Modal } from "react-bootstrap";
 import { useFirestore } from 'react-redux-firebase';
 import styles from './PlaceModal.module.css';
 
-function NewPlaceForm(props){
+function EditPlaceForm(props){
 
   const firestore = useFirestore();
 
-  function handleNewPlaceSubmission(event) {
+  function handleEditPlaceSubmission(event) {
     event.preventDefault();
     const propertiesToAdd = {
       name: event.target.name.value, 
@@ -17,7 +17,7 @@ function NewPlaceForm(props){
     }
 
     firestore.update({collection: 'places', doc: props.place.get('featureId')}, propertiesToAdd);
-    props.onPlaceCreation({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
+    props.onEditPlace({name: event.target.name.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
     
   }
 
@@ -28,19 +28,19 @@ function NewPlaceForm(props){
           <Modal.Title>Add a New Place</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleNewPlaceSubmission}>
+          <form onSubmit={handleEditPlaceSubmission}>
             <input className="form-control"
               type='text'
               name='name'
-              placeholder='Name of Place' 
+              placeholder={props.place.get('name')} 
               required />
             <input className="form-control"
               type='text'
               name='country'
-              placeholder='Country' />
+              placeholder={props.place.get('country')}  />
             <textarea className="form-control"
               name='notes'
-              placeholder='Notes'/>
+              placeholder={props.place.get('notes')} />
             <button className={styles.modalButton} type='submit'>Save</button>
           </form>
         </Modal.Body>
@@ -49,11 +49,11 @@ function NewPlaceForm(props){
   );
 }
 
-NewPlaceForm.propTypes = {
+EditPlaceForm.propTypes = {
   onHide: PropTypes.func,
   onShow: PropTypes.bool,
-  onPlaceCreation: PropTypes.func,
+  onEditPlace: PropTypes.func,
   place: PropTypes.object
 }
 
-export default NewPlaceForm;
+export default EditPlaceForm;

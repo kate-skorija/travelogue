@@ -16,6 +16,7 @@ function PlaceDetails(props){
           <p>Notes: {props.place.get('notes')}</p>
         </Modal.Body>
         <Modal.Footer>
+          <button className={styles.modalButton} onClick={props.onEditClick}>Edit</button>
           <button className={styles.modalButton} onClick={props.onHide}>Close</button>
         </Modal.Footer>
       </Modal>
@@ -26,8 +27,8 @@ function PlaceDetails(props){
 PlaceDetails.propTypes = {
   onHide: PropTypes.func,
   onShow: PropTypes.bool,
-  onPlaceEdit: PropTypes.func,
-  onPlaceDelete: PropTypes.func,
+  onEditClick: PropTypes.func,
+  onDelete: PropTypes.func,
   place: PropTypes.object
 }
 

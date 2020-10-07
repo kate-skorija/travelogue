@@ -7,12 +7,14 @@
 ## Description
 Travelogue is a visual resource for users to keep track of places they’ve been, and places they would like to go.
 Users can explore a world map and place pins on locations, updating the pins with descriptions and notes as they wish. 
-Check out the deployed application: [Travelogue](https://travelogue-86d21.firebaseapp.com).
+**Check out the deployed application: [Travelogue](https://travelogue-86d21.firebaseapp.com)!**
+<br><br>
+Map tiles by [Stamen Design](http://stamen.com), under [CC BY 3.0](http://creativecommons.org/licenses/by/3.0). Data by [OpenStreetMap](http://openstreetmap.org), under [ODbL](http://www.openstreetmap.org/copyright).
 <br>
 
 ## User Stories
 *  Users can navigate a world map.
-*  Users can to place pins on map to mark places they’ve been and places they would like to go.
+*  Users can place pins on map to mark places they’ve been and places they would like to go.
 *  Users can login to view previously saved pins.
 *  Users can click on a placed pin to add, view, or update notes they’ve made about that place, or to delete that place.
 <br>
@@ -86,7 +88,7 @@ To Clone:
 
 ## Known Bugs
 
-In order for the pins to display correctly after they've been modified, the page currently has to refresh on the closing of the place modal. I hope to remedy this by adjusting how I'm adding layers to the map.
+In order for the pins to display correctly after they've been modified, the page currently has to refresh on the closing of the place modal. I hope to remedy this by adjusting how I am currently adding layers to the map.
 <br>
 
 ## Support and Contact Details
@@ -102,7 +104,8 @@ If there are any issues or questions, please reach out to me through [my GitHub 
 *  JSX
 *  React
 *  Redux
-*  OpenLayers 
+*  Firebase / Firestore
+*  OpenLayers API
 *  Stamen 
 *  Webpack
 *  npm

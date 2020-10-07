@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
 import { useFirestore } from 'react-redux-firebase';
+import styles from './PlaceModal.module.css';
 
 function NewPlaceForm(props){
 
@@ -28,18 +29,18 @@ function NewPlaceForm(props){
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleNewPlaceSubmission}>
-            <input
+            <input className="form-control"
               type='text'
               name='name'
               placeholder='Name of Place' 
               required />
-            <input
+            <input className="form-control"
               type='text'
               name='country'
               placeholder='Country' />
-            <textarea
+            <textarea className="form-control"
               name='notes'/>
-            <button type='submit'>Save</button>
+            <button className={styles.modalButton} type='submit'>Save</button>
           </form>
         </Modal.Body>
       </Modal>
@@ -51,7 +52,7 @@ NewPlaceForm.propTypes = {
   onHide: PropTypes.func,
   onShow: PropTypes.bool,
   onPlaceCreation: PropTypes.func,
-  id: PropTypes.string
+  place: PropTypes.object
 }
 
 export default NewPlaceForm;

@@ -1,4 +1,3 @@
-
 import React from "react";
 import Nav from './Nav';
 import Map from 'ol/Map'
@@ -15,11 +14,9 @@ import firebase from "firebase/app";
 import { Feature } from "ol";
 import { Point } from 'ol/geom'
 import { withFirestore } from 'react-redux-firebase';
-// import Select from 'ol/interaction/Select';
-// import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
 import 'ol/ol.css'
-import { Modal } from 'react-bootstrap';
 import NewPlaceForm from './NewPlaceForm';
+import PlaceDetails from './PlaceDetails';
 import 'firebase/auth';
 
 class MapControl extends React.Component {
@@ -207,27 +204,19 @@ class MapControl extends React.Component {
   }
 
   hideModal = () => {
-    this.setState({ modalVisible: false });
+    this.setState({ 
+      modalVisible: false, 
+      selectedFeature: null 
+    });
     window.location.reload(false);
   }
 
   render() {
     let featureModal = null;
     if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
-      featureModal = <Modal show={this.state.modalVisible} onHide={this.hideModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>{this.state.selectedFeature.get('name')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Country: {this.state.selectedFeature.get('country')}</p>
-          <p>Notes: {this.state.selectedFeature.get('notes')}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <button className={styles.modalButton} onClick={this.hideModal}>Close</button>
-        </Modal.Footer>
-      </Modal>
+      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.hideModal} place={this.state.selectedFeature}/>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
-      featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.handleClose} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
+      featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.hideModal} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
     }
     return (
       <React.Fragment>

@@ -24,7 +24,7 @@ function EditPlaceForm(props) {
     <React.Fragment>
       <Modal show={props.onShow} onHide={props.onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Add a New Place</Modal.Title>
+          <Modal.Title>Edit Place</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleEditPlaceSubmission}>

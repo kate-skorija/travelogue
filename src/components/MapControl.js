@@ -159,13 +159,6 @@ class MapControl extends React.Component {
   displayPoints() {
     //Create points on map for each feature
     const pointStyle = new Style({
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)',
-      }),
-      stroke: new Stroke({
-        color: '#ffcc33',
-        width: 2,
-      }),
       image: new CircleStyle({
         radius: 7,
         fill: new Fill({

@@ -1,6 +1,6 @@
 .navBar {
   display: grid;
-  grid-template-columns: 90% 108px;
+  grid-template-columns: 91% 100px;
   grid-template-rows: 12vh;
   align-items: center;
   padding: 0 55px;
@@ -12,7 +12,7 @@
   color: white;
   text-shadow: -4px 4px 0px #04047c,
   -6px 6px 0px blue;
-  margin-left: 10px;
+  margin-left: 16px;
   font-size: 37px;
 }
 

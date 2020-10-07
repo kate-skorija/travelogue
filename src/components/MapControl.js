@@ -159,21 +159,59 @@ class MapControl extends React.Component {
   }
 
   displayPoints() {
-    const pointStyle = new Style({
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)',
-      }),
-      stroke: new Stroke({
-        color: 'blue',
-        width: 2,
-      }),
-      image: new CircleStyle({
-        radius: 7,
-        fill: new Fill({
-          color: '#ffcc33',
-        }),
-      }),
+    let pointStyle = null;
+    this.state.features.forEach((feature) => {
+      console.log(this.state.features);
+      if (feature.get('type') === "toGo") {
+        pointStyle = new Style({
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+          stroke: new Stroke({
+            color: 'blue',
+            width: 2,
+          }),
+          image: new CircleStyle({
+            radius: 7,
+            fill: new Fill({
+              color: 'red',
+            }),
+          }),
+        });
+      } else {
+        pointStyle = new Style({
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+          stroke: new Stroke({
+            color: 'blue',
+            width: 2,
+          }),
+          image: new CircleStyle({
+            radius: 7,
+            fill: new Fill({
+              color: '#ffcc33',
+            }),
+          }),
+        });
+      }
     });
+
+    // const pointStyle = new Style({
+    //   fill: new Fill({
+    //     color: 'rgba(255, 255, 255, 0.2)',
+    //   }),
+    //   stroke: new Stroke({
+    //     color: 'blue',
+    //     width: 2,
+    //   }),
+    //   image: new CircleStyle({
+    //     radius: 7,
+    //     fill: new Fill({
+    //       color: '#ffcc33',
+    //     }),
+    //   }),
+    // });
 
     const vectorSource = new VectorSource({
       features: this.state.features
@@ -188,7 +226,6 @@ class MapControl extends React.Component {
   }
 
   handleNewPlace = (newPlace) => {
-    console.log(newPlace);
     const newPlaceFeature = new Feature({
       geometry: new Point(newPlace.longitude, newPlace.latitude),
       longitude: newPlace.longitude,

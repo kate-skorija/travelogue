@@ -3,11 +3,11 @@
 ### Epicodus Capstone Project
 
 ### By Kate Skorija
-<br>
 
 ## Description
 Travelogue is a visual resource for users to keep track of places they’ve been, and places they would like to go.
 Users can explore a world map and place pins on locations, updating the pins with descriptions and notes as they wish. 
+Check out the deployed application: [Travelogue](https://travelogue-86d21.firebaseapp.com).
 <br>
 
 ## User Stories

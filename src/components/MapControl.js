@@ -32,7 +32,7 @@ class MapControl extends React.Component {
       modalVisible: false,
       selectedFeature: null,
       editing: false,
-      deleted: true,
+      deleted: false,
       redirect: null
     };
   }
@@ -217,14 +217,15 @@ class MapControl extends React.Component {
       features: updatedFeatures,
       editing: false,
       deleted: true,
-      modalVisible: false,
-      selectedFeature: null
+      // modalVisible: true,
+      // selectedFeature: null
     });
-    this.closeModal();
+    // this.closeModal();
   }
 
   closeModal = () => {
     this.setState({ 
+      deleted: false,
       modalVisible: false, 
       selectedFeature: null 
     });
@@ -235,7 +236,7 @@ class MapControl extends React.Component {
     let featureModal = null;
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />
-    } else if (this.state.delete) {
+    } else if (this.state.deleted) {
       featureModal = <DeletePlace onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} />
     } else if (this.state.editing) {
       featureModal = <EditPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditPlace={this.handleNewPlace} onDeletePlace={this.handleDeletePlace} />

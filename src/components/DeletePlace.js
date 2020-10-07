@@ -12,7 +12,7 @@ function DeletePlace(props) {
           <Modal.Title>Delete Place</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{props.place.get('name')} has been deleted from your map.</p>
+          <p>Place has been deleted from your map.</p>
         </Modal.Body>
         <Modal.Footer>
           <button className={styles.modalButton} onClick={props.onHide}>Close</button>

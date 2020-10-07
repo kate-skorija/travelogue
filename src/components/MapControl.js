@@ -18,6 +18,7 @@ import 'ol/ol.css'
 import NewPlaceForm from './NewPlaceForm';
 import EditPlaceForm from './EditPlaceForm';
 import PlaceDetails from './PlaceDetails';
+import DeletePlace from './DeletePlace';
 import { Redirect } from "react-router-dom";
 import 'firebase/auth';
 
@@ -31,6 +32,7 @@ class MapControl extends React.Component {
       modalVisible: false,
       selectedFeature: null,
       editing: false,
+      deleted: true,
       redirect: null
     };
   }
@@ -154,7 +156,6 @@ class MapControl extends React.Component {
   }
 
   displayPoints() {
-    console.log(this.state.features);
     const pointStyle = new Style({
       fill: new Fill({
         color: 'rgba(255, 255, 255, 0.2)',
@@ -213,6 +214,20 @@ class MapControl extends React.Component {
     });
   }
 
+  handleDeletePlace = (id) => {
+    console.log(id);
+    this.props.firestore.delete({collection: 'places', doc: id});
+    const updatedFeatures = this.state.features.filter(place => place.get('featureId') !== id);
+    this.setState({
+      features: updatedFeatures,
+      editing: false,
+      deleted: true,
+      modalVisible: false,
+      selectedFeature: null
+    });
+    this.closeModal();
+  }
+
   closeModal = () => {
     this.setState({ 
       modalVisible: false, 
@@ -225,10 +240,12 @@ class MapControl extends React.Component {
     let featureModal = null;
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />
+    } else if (this.state.delete) {
+      featureModal = <DeletePlace onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} />
     } else if (this.state.editing) {
-      featureModal = <EditPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditPlace={this.handleNewPlace}/>
+      featureModal = <EditPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditPlace={this.handleNewPlace} onDeletePlace={this.handleDeletePlace} />
     } else if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
-      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditClick={this.handleEditClick}/>
+      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature} onEditClick={this.handleEditClick} />
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
       featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
     }

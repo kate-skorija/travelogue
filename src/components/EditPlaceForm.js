@@ -42,6 +42,7 @@ function EditPlaceForm(props){
               name='notes'
               placeholder={props.place.get('notes')} />
             <button className={styles.modalButton} type='submit'>Save</button>
+            <button className={styles.modalButton} onClick={()=> props.onDeletePlace(props.place.get('featureId'))}>Delete Place</button>
           </form>
         </Modal.Body>
       </Modal>
@@ -53,6 +54,7 @@ EditPlaceForm.propTypes = {
   onHide: PropTypes.func,
   onShow: PropTypes.bool,
   onEditPlace: PropTypes.func,
+  onDeletePlace: PropTypes.func,
   place: PropTypes.object
 }
 

@@ -17,6 +17,7 @@ import { withFirestore } from 'react-redux-firebase';
 import 'ol/ol.css'
 import NewPlaceForm from './NewPlaceForm';
 import PlaceDetails from './PlaceDetails';
+import { Redirect } from "react-router-dom";
 import 'firebase/auth';
 
 class MapControl extends React.Component {
@@ -27,12 +28,12 @@ class MapControl extends React.Component {
       map: null,
       features: [],
       modalVisible: false,
-      selectedFeature: null
+      selectedFeature: null,
+      redirect: null
     };
   }
   
   componentDidMount() {
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // Get user's previously added points from firestore and add them to features array
@@ -61,7 +62,9 @@ class MapControl extends React.Component {
           });
         });
       } else {
-        
+        this.setState({
+          redirect: "/Login"
+        });
       }
     });
 
@@ -91,7 +94,6 @@ class MapControl extends React.Component {
     });
     
     map.on('click', this.handleMapClick.bind(this));
-
   }
 
   componentDidUpdate() {
@@ -180,7 +182,6 @@ class MapControl extends React.Component {
   }
 
   handleNewPlace = (newPlace) => {
-
     const newPlaceFeature = new Feature({
       geometry: new Point(newPlace.longitude, newPlace.latitude),
       longitude: newPlace.longitude,
@@ -203,7 +204,7 @@ class MapControl extends React.Component {
     });
   }
 
-  hideModal = () => {
+  closeModal = () => {
     this.setState({ 
       modalVisible: false, 
       selectedFeature: null 
@@ -213,10 +214,12 @@ class MapControl extends React.Component {
 
   render() {
     let featureModal = null;
-    if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
-      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.hideModal} place={this.state.selectedFeature}/>
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />
+    } else if (this.state.modalVisible && this.state.selectedFeature.get('name')) {
+      featureModal = <PlaceDetails onShow={this.state.modalVisible} onHide={this.closeModal} place={this.state.selectedFeature}/>
     } else if (this.state.modalVisible && !this.state.selectedFeature.get('name')) {
-      featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.hideModal} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
+      featureModal = <NewPlaceForm onShow={this.state.modalVisible} onHide={this.closeModal} onPlaceCreation={this.handleNewPlace} place={this.state.selectedFeature} />
     }
     return (
       <React.Fragment>

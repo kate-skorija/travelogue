@@ -21,6 +21,10 @@
   margin: 0;
 }
 
+.logoutContent h4 {
+  margin-top: 20px;
+}
+
 .logoutContent button{
   background-color: #ffcc33;
   border: none;

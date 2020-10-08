@@ -6,3 +6,7 @@
   padding: 5px 15px;
   margin: 10px 10px 0 0;
 }
+
+input, select {
+  margin-bottom: 10px;
+}

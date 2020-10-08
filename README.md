@@ -33,6 +33,40 @@ Map tiles by [Stamen Design](http://stamen.com), under [CC BY 3.0](http://creati
 ![Place Details](./public/PlaceDetails.png)
 ![New Place Form](./public/NewPlace.png)
 
+## Minimum Viable Product Goals:
+
+*  Users can navigate a world map easily (zoom, pan, etc).
+*  Users can place pins on the map with a click, to mark places they’ve been and add places they would like to go.
+*  Users can create a login and view their previously placed pins once logged in.
+*  Users can click on a placed pin and create/read/update/delete notes for that place.
+
+## Stretch Goals:
+
+*  User's pin color will change based on if it is a place they've been, or a place they want to go.
+*  Users can upload local photos to the places they have been, so they can look back on travel memories.
+*  Users can access a user dashboard where they can browse their places in list form, and search through their places and notes.
+
+## Known Bugs
+
+In order for the pins to display correctly after they've been modified, the page currently has to refresh on the closing of the place modal. I hope to remedy this by adjusting how I am currently adding layers to the map.
+<br>
+
+## Technologies Used
+
+*  Git
+*  CSS
+*  JavaScript
+*  JSX
+*  React
+*  Redux
+*  Firebase / Firestore
+*  OpenLayers API
+*  Stamen 
+*  React Bootstrap
+*  Webpack
+*  npm
+<br><br>
+
 ## Set Up/Installation
 
 To Clone:
@@ -73,43 +107,12 @@ To Clone:
 
 7. Now you're ready to install. Type `$ npm install` in your terminal to install all webpack plugins and dependencies. Once finished, type `$npm run build`, then`$ npm start` to interact with the project in the browser.
 
-## Minimum Viable Product Goals:
 
-*  Users can navigate a world map easily (zoom, pan, etc).
-*  Users can place pins on the map with a click, to mark places they’ve been and add places they would like to go.
-*  Users can create a login and view their previously placed pins once logged in.
-*  Users can click on a placed pin and create/read/update/delete notes for that place.
-
-## Stretch Goals:
-
-*  User's pin color will change based on if it is a place they've been, or a place they want to go.
-*  Users can upload local photos to the places they have been, so they can look back on travel memories.
-*  Users can access a user dashboard where they can browse their places in list form, and search through their places and notes.
-
-## Known Bugs
-
-In order for the pins to display correctly after they've been modified, the page currently has to refresh on the closing of the place modal. I hope to remedy this by adjusting how I am currently adding layers to the map.
-<br>
 
 ## Support and Contact Details
 
 If there are any issues or questions, please reach out to me through [my GitHub account](https://github.com/kate-skorija).
 <br>
-
-## Technologies Used
-
-*  Git
-*  CSS
-*  JavaScript
-*  JSX
-*  React
-*  Redux
-*  Firebase / Firestore
-*  OpenLayers API
-*  Stamen 
-*  Webpack
-*  npm
-<br><br>
 
 ### License
 

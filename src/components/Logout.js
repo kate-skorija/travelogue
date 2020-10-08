@@ -23,7 +23,7 @@ function Logout() {
             <h3>Thanks for using Travelogue.</h3>
             <h3> See you again soon.</h3>
             {loggedIn ? <button onClick={doLogout}>Log Out</button> : <h4>You have successfully logged out!</h4>}
-            <button><Link to='/'>Back to Travelogue</Link></button>
+            <button><Link to='/explore'>Back to Travelogue</Link></button>
           </div>
         </div>
       </React.Fragment>

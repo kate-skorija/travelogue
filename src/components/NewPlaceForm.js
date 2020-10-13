@@ -18,7 +18,7 @@ function NewPlaceForm(props){
     }
 
     firestore.update({collection: 'places', doc: props.place.get('featureId')}, propertiesToAdd);
-    console.log(event.target.type.value);
+    
     props.onPlaceCreation({name: event.target.name.value, type: event.target.type.value, country: event.target.country.value, notes: event.target.notes.value, longitude: props.place.get('longitude'), latitude: props.place.get('latitude'), userId: props.place.get('userId'), featureId: props.place.get('featureId') });
   }
 

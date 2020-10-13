@@ -217,10 +217,7 @@ class MapControl extends React.Component {
       features: updatedFeatures,
       editing: false,
       deleted: true,
-      // modalVisible: true,
-      // selectedFeature: null
     });
-    // this.closeModal();
   }
 
   closeModal = () => {

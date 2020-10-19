@@ -5,21 +5,8 @@
   border: 10px solid white;
 }
 
-.popup {
-  border-radius: 5px;
-  border: 1px solid grey;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 2px;
-  width: 100px;
-  height: 100px;
-}
-
 .wrapper {
   background-color: black;
   width: 100vw;
   height: 100vh;
-}
-
-.form-control{
-  padding-bottom: 10px;
 }

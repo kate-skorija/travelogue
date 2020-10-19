@@ -1,11 +1,11 @@
 import React from "react";
 import firebase from "firebase/app";
+import styled from 'styled-components'
 import Nav from './Nav';
 import NewPlaceForm from './NewPlaceForm';
 import EditPlaceForm from './EditPlaceForm';
 import PlaceDetails from './PlaceDetails';
 import DeletePlace from './DeletePlace';
-import styles from './MapControl.module.css';
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
@@ -21,6 +21,19 @@ import { withFirestore } from 'react-redux-firebase';
 import { Redirect } from "react-router-dom";
 import 'firebase/auth';
 import 'ol/ol.css'
+
+const MapWrapper = styled.section`
+  background-color: black;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const StyledMap = styled.div`
+  width: 90vw;
+  height: 80vh;
+  margin: auto;
+  border: 10px solid white;
+`;
 
 class MapControl extends React.Component {
 
@@ -229,7 +242,11 @@ class MapControl extends React.Component {
     window.location.reload(false);
   }
 
+  
+
   render() {
+    
+
     let featureModal = null;
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />
@@ -244,11 +261,11 @@ class MapControl extends React.Component {
     }
     return (
       <React.Fragment>
-        <div className={styles.wrapper}>
+        <MapWrapper>
           <Nav />
-          <div className={styles.map} id='map'></div>
+          <StyledMap id='map'></StyledMap>
           {featureModal}
-        </div>
+        </MapWrapper>
       </React.Fragment>
     );
   }

@@ -47,8 +47,22 @@ const Button = styled.button`
 `;
 
 const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: black;
+  font-family: 'Arimo', sans-serif;
+
+  &:link {
+    text-decoration: none;
+    color: black
+  }
+  &:visited {
+    text-decoration: none;
+    color: black
+  }
+  &:hover {
+    text-decoration: none;
+  }
+  &:active {
+    text-decoration: none;
+  }
 `;
 
 function Logout() {

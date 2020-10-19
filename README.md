@@ -33,6 +33,14 @@ Map tiles by [Stamen Design](http://stamen.com), under [CC BY 3.0](http://creati
 ![Place Details](./public/PlaceDetails.png)
 ![New Place Form](./public/NewPlace.png)
 
+## Functionality Videos
+
+Finding and adding a new place to your map.
+![New Place Video](./public/newPlace.gif)
+Deleting a place from your map.
+![Delete Place](./public/deletePlace.gif)
+
+
 ## Minimum Viable Product Goals:
 
 *  Users can navigate a world map easily (zoom, pan, etc).

@@ -2,7 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
 import { useFirestore } from 'react-redux-firebase';
-import styles from './PlaceModal.module.css';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background-color: #ffcc33;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 5px 15px;
+  margin: 10px 10px 0 0;
+`;
+
+const Input = styled.input`
+  margin-bottom: 10px;
+`;
+
+const Select = styled.select`
+  margin-bottom: 10px;
+`;
 
 function NewPlaceForm(props){
 
@@ -31,23 +48,23 @@ function NewPlaceForm(props){
         <Modal.Body>
           <form onSubmit={handleNewPlaceSubmission}>
             <label for="type">Type of Place:</label>
-            <select id="type" name="type" className="form-control">
+            <Select id="type" name="type" className="form-control">
               <option value="toGo">To Go</option>
               <option value="haveBeen">Have Been</option>
-            </select>
-            <input className="form-control"
+            </Select>
+            <Input className="form-control"
               type='text'
               name='name'
               placeholder='Name of Place' 
               required />
-            <input className="form-control"
+            <Input className="form-control"
               type='text'
               name='country'
               placeholder='Country' />
             <textarea className="form-control"
               name='notes'
               placeholder='Notes'/>
-            <button className={styles.modalButton} type='submit'>Save</button>
+            <Button type='submit'>Save</Button>
           </form>
         </Modal.Body>
       </Modal>

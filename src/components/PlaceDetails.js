@@ -1,7 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
-import styles from './PlaceModal.module.css';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background-color: #ffcc33;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 5px 15px;
+  margin: 10px 10px 0 0;
+`;
 
 function PlaceDetails(props) {
 
@@ -25,8 +34,8 @@ function PlaceDetails(props) {
           <p>Notes: {props.place.get('notes')}</p>
         </Modal.Body>
         <Modal.Footer>
-          <button className={styles.modalButton} onClick={props.onEditClick}>Edit</button>
-          <button className={styles.modalButton} onClick={props.onHide}>Close</button>
+          <Button onClick={props.onEditClick}>Edit</Button>
+          <Button onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
     </React.Fragment>

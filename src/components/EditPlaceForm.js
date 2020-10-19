@@ -2,7 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
 import { useFirestore } from 'react-redux-firebase';
-import styles from './PlaceModal.module.css';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background-color: #ffcc33;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 5px 15px;
+  margin: 10px 10px 0 0;
+`;
+
+const Input = styled.input`
+  margin-bottom: 10px;
+`;
+
+const Select = styled.select`
+  margin-bottom: 10px;
+`;
 
 function EditPlaceForm(props) {
 
@@ -24,29 +41,29 @@ function EditPlaceForm(props) {
     <React.Fragment>
       <Modal show={props.onShow} onHide={props.onHide} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Place</Modal.Title>
+          <Modal.Title>Edit {props.place.get('name')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleEditPlaceSubmission}>
-          <select id="type" name="type" className="form-control">
+          <label for="type">Type of Place:</label>
+          <Select id="type" name="type" className="form-control">
               <option value="toGo">To Go</option>
               <option value="haveBeen">Have Been</option>
-            </select>
-            <input className="form-control"
+            </Select>
+            <Input className="form-control"
               type='text'
               name='name'
               placeholder={props.place.get('name')} 
               required />
-            <label for="type">Type of Place:</label>
-            <input className="form-control"
+            <Input className="form-control"
               type='text'
               name='country'
               placeholder={props.place.get('country')}  />
             <textarea className="form-control"
               name='notes'
               placeholder={props.place.get('notes')} />
-            <button className={styles.modalButton} type='submit'>Save</button>
-            <button className={styles.modalButton} onClick={()=> props.onDeletePlace(props.place.get('featureId'))}>Delete Place</button>
+            <Button type='submit'>Save</Button>
+            <Button onClick={()=> props.onDeletePlace(props.place.get('featureId'))}>Delete Place</Button>
           </form>
         </Modal.Body>
       </Modal>

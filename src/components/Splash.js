@@ -44,9 +44,22 @@ const Button = styled.button`
 `;
 
 const StyledLink = styled(Link)`
-  text-decoration: none;
   font-size: 20px;
-  color: black;
+  color: black
+  
+  &:link {
+    text-decoration: none;
+  }
+  &:visited {
+    text-decoration: none;
+    color: black
+  }
+  &:hover {
+    text-decoration: none;
+  }
+  &:active {
+    text-decoration: none;
+  }
 `;
 
 function Splash() {

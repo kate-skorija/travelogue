@@ -34,11 +34,10 @@ const Button = styled.button`
 
 const StyledLink = styled(Link)`
   font-family: 'Arimo', sans-serif;
-
+  color: black
 
   &:link {
     text-decoration: none;
-    color: black
   }
   &:visited {
     text-decoration: none;

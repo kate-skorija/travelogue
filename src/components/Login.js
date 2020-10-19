@@ -1,7 +1,59 @@
 import React from "react";
 import firebase from "firebase/app";
 import { withRouter } from 'react-router-dom';
-import styles from './Login.module.css';
+import styled from 'styled-components';
+
+const LoginWrapper = styled.section`
+  background-color: black;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+`;
+
+const LoginContent = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  text-align: center;
+  font-family: 'Arimo', sans-serif;
+`;
+
+const Header = styled.h1`
+  font-family: 'Arial', 'sans-serif';
+  font-size: 70px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+`;
+
+const Paragraph = styled.p`
+  font-size: 23px;
+`;
+
+const Input = styled.input`
+  display: block;
+  width: 375px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 20px;
+`;
+
+const Button = styled.button`
+  background-color: #ffcc33;
+  border: none;
+  margin: 10px;
+  padding: 15px 40px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    background-color: blue;
+  }
+`;
 
 const Login = ({history}) => {  
 
@@ -18,23 +70,23 @@ const Login = ({history}) => {
 
   return (
     <React.Fragment>
-      <div className={styles.login}>
-        <div className={styles.loginContent}>
-          <h1>Travelogue</h1>
-          <p>Log in to your account.</p>
+      <LoginWrapper>
+        <LoginContent>
+          <Header>Travelogue</Header>
+          <Paragraph>Log in to your account.</Paragraph>
           <form onSubmit={doLogin}>
-            <input
+            <Input
               type='text'
               name='signinEmail'
               placeholder='email' />
-            <input
+            <Input
               type='password'
               name='signinPassword'
               placeholder='password' />
-            <button type='submit'>Log In</button>
+            <Button type='submit'>Log In</Button>
           </form>
-        </div>
-      </div>
+        </LoginContent>
+      </LoginWrapper>
     </React.Fragment>
   );
 }

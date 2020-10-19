@@ -1,6 +1,6 @@
 import React from "react";
 import firebase from "firebase/app";
-import styled from 'styled-components'
+import styled from 'styled-components';
 import Nav from './Nav';
 import NewPlaceForm from './NewPlaceForm';
 import EditPlaceForm from './EditPlaceForm';

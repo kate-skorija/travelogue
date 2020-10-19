@@ -1,7 +1,59 @@
 import React from "react";
 import firebase from "firebase/app";
 import { withRouter } from 'react-router-dom';
-import styles from './Register.module.css';
+import styled from 'styled-components';
+
+const RegisterWrapper = styled.section`
+  background-color: black;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+`;
+
+const RegisterContent = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  text-align: center;
+  font-family: 'Arimo', sans-serif;
+`;
+
+const Header = styled.h1`
+  font-family: 'Arial', 'sans-serif';
+  font-size: 70px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+`;
+
+const Paragraph = styled.p`
+  font-size: 23px;
+`;
+
+const Input = styled.input`
+  display: block;
+  width: 470px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 20px;
+`;
+
+const Button = styled.button`
+  background-color: #ffcc33;
+  border: none;
+  margin: 10px;
+  padding: 15px 40px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    background-color: blue;
+  }
+`;
 
 const Register = ({history}) => {  
 
@@ -18,23 +70,23 @@ const Register = ({history}) => {
 
   return (
     <React.Fragment>
-      <div className={styles.register}>
-        <div className={styles.registerContent}>
-          <h1>Travelogue</h1>
-          <p>For endless exploration, create a free account.</p>
+      <RegisterWrapper>
+        <RegisterContent>
+          <Header>Travelogue</Header>
+          <Paragraph>For endless exploration, create a free account.</Paragraph>
           <form onSubmit={doRegister}>
-            <input
+            <Input
               type='text'
               name='email'
               placeholder='email' />
-            <input
+            <Input
               type='password'
               name='password'
               placeholder='Password' />
-            <button type='submit'>Register</button>
+            <Button type='submit'>Register</Button>
           </form>
-        </div>
-      </div>
+        </RegisterContent>
+      </RegisterWrapper>
     </React.Fragment>
   );
 }

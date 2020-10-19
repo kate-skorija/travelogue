@@ -35,6 +35,7 @@ const Button = styled.button`
 const StyledLink = styled(Link)`
   font-family: 'Arimo', sans-serif;
 
+
   &:link {
     text-decoration: none;
     color: black

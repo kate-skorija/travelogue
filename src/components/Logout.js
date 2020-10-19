@@ -40,29 +40,14 @@ const Button = styled.button`
   font-size: 20px;
   text-decoration: none;
   color: black;
-
   &:hover {
     background-color: blue;
   }
 `;
 
 const StyledLink = styled(Link)`
-  font-family: 'Arimo', sans-serif;
-
-  &:link {
-    text-decoration: none;
-    color: black
-  }
-  &:visited {
-    text-decoration: none;
-    color: black
-  }
-  &:hover {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
+  text-decoration: none;
+  color: black;
 `;
 
 function Logout() {
